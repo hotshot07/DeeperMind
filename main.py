@@ -26,7 +26,6 @@ def main():
 
 		#Player 1 = RED, Player 2 = YELLOW
 		game_state.process_events()
-		game_state.print_board()
 		game_state.draw_board()
 
 		if game_state.get_valid_moves() == []:
