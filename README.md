@@ -6,7 +6,7 @@ Best M(AI) group
 
 ```bash
 $pip3 install -r requirements.txt 
-$python3 game.py
+$python3 game.py {number_rows} {number_columns} {connect_number}
 ```
 
 ## How to
@@ -19,8 +19,10 @@ $python3 game.py
 
 #### Checking functions
 
-- Is valid location
+- is valid location
+- get valid moves
 - check for win
+- get next open row
 
 #### Interaction functions
 
