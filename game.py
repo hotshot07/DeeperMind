@@ -1,23 +1,23 @@
 import sys
 import pygame
-import utils
 import math
 import numpy as np
 
 from settings import *
 
 class Game:
-    def __init__(self, row_count, col_count) -> None:
+    def __init__(self, row_count, col_count, connect) -> None:
         self.pygame = pygame.init()
+        logo = pygame.image.load('res/nyan.png')
+        pygame.display.set_icon(logo)
         self.col_count = col_count
         self.row_count = row_count
+        self.connect = connect
         self._init_board()
         self.game_over = False
         self.turn = 0
-
         self.width = self.col_count * SQUARESIZE
         self.height = (self.row_count +1) * SQUARESIZE
-
         self._init_screen()
         self._init_font()  
     
@@ -34,7 +34,7 @@ class Game:
 
     def _init_font(self) -> None:
         pygame.font.init()
-        self.myfont = pygame.font.SysFont("monospace", 75)
+        self.myfont = pygame.font.SysFont("monospace", 40)
     
 
     def update(self) -> None:
@@ -49,7 +49,6 @@ class Game:
             if event.type == pygame.MOUSEMOTION:
                 pygame.draw.rect(self.screen, BLACK, (0,0, self.width, SQUARESIZE))
                 posx = event.pos[0]
-                print(self.turn)
                 if self.turn == 0:
                     pygame.draw.circle(self.screen, RED, (posx, int(SQUARESIZE/2)), RADIUS)
                 else:
@@ -74,47 +73,64 @@ class Game:
 
             if self.check_for_win(piece):
                 label = self.myfont.render(f"Player {piece} wins!!", 1, colour)
-                self.screen.blit(label, (40,10))
+                text_pos = label.get_rect(centerx=self.screen.get_width()/2, y=10)
+                self.screen.blit(label, text_pos)
                 self.game_over = True
             
             self.next_turn()
+
+
+    def wait(self):
+        pygame.time.wait(3000)
+
+##-----------Checking-Functions---------------------------------------------------------------------##
+
+    def check_for_win(self, piece: int) -> bool:
+
+        # Check horizontal locations for win
+        for row in self.board:
+            for i in range(self.row_count- (self.connect-2)):
+                horizontal_range = [x for x in row[i:i+self.connect]]
+                if all(x == piece for x in horizontal_range) and len(horizontal_range) > 0:
+                    return True
+        
+        # Check vertical locations for win
+        for col in self.board.T:
+            for i in range(self.col_count- (self.connect-1)):
+                vertical_range = [x for x in col[i:i+self.connect]]
+                if all([x == piece for x in vertical_range]) and len(vertical_range) > 0:
+                    return True
+
+        # Check positively sloped diaganols
+        for c in range(self.col_count-(self.connect-1)):
+            for r in range(self.row_count-(self.connect-1)):
+                for i in range(self.connect):
+                    if self.board[r+i][c+i] != piece: break
+                    if i == (self.connect-1): return True
+
+        # Check negatively sloped diaganols
+        for c in range(self.col_count-(self.connect-1)):
+            for r in range((self.connect-1), self.row_count):
+                for i in range(self.connect):
+                    if self.board[r-i][c+i] != piece: break
+                    if i == (self.connect-1): return True
+
+
+    def is_valid_location(self, col)  -> bool:
+        return self.board[self.row_count-1][col] == 0
+    
+    
+    def get_valid_moves(self) -> list:
+        moves = []
+        for col in range(self.col_count):
+            moves.append(col) if self.is_valid_location(col) else 0
+        return moves
     
 
     def get_next_open_row(self, col: int)  -> int:
         for r in range(self.col_count):
             if self.board[r][col] == 0:
                 return r
-
-##-----------Checking-Functions---------------------------------------------------------------------##
-
-    def check_for_win(self, piece: int) -> bool:
-        # Check horizontal locations for win
-        for c in range(self.col_count-3):
-            for r in range(self.row_count):
-                if self.board[r][c] == piece and self.board[r][c+1] == piece and self.board[r][c+2] == piece and self.board[r][c+3] == piece:
-                    return True
-
-        # Check vertical locations for win
-        for c in range(self.col_count):
-            for r in range(self.row_count-3):
-                if self.board[r][c] == piece and self.board[r+1][c] == piece and self.board[r+2][c] == piece and self.board[r+3][c] == piece:
-                    return True
-
-        # Check positively sloped diaganols
-        for c in range(self.col_count-3):
-            for r in range(self.row_count-3):
-                if self.board[r][c] == piece and self.board[r+1][c+1] == piece and self.board[r+2][c+2] == piece and self.board[r+3][c+3] == piece:
-                    return True
-
-        # Check negatively sloped diaganols
-        for c in range(self.col_count-3):
-            for r in range(3, self.row_count):
-                if self.board[r][c] == piece and self.board[r-1][c+1] == piece and self.board[r-2][c+2] == piece and self.board[r-3][c+3] == piece:
-                    return True
-    
-
-    def is_valid_location(self, col)  -> bool:
-        return self.board[self.row_count-1][col] == 0
     
 
 ##-----------Interaction-Functions---------------------------------------------------------------------##
@@ -146,8 +162,3 @@ class Game:
                 elif self.board[r][c] == 2:
                     pygame.draw.circle(self.screen, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), self.height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
         pygame.display.update()
-
-
-
-    def wait(self):
-        pygame.time.wait(3000)
