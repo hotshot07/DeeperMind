@@ -1,4 +1,3 @@
-from webbrowser import Galeon
 from utils import *
 import game
 import math
@@ -79,7 +78,7 @@ def best_move(game_state: game.Game, depth):
         #Enbale to show evaluations per move/column
         # print('eval:', eval, counter)
         print('Branches explored', counter)
-        
+
     game_state.drop_piece(move[0], move[1], AI)
     game_state.check_for_win_and_handle(AI)
     game_state.next_turn()
