@@ -137,6 +137,7 @@ class Game:
 
     def drop_piece(self, row: int, col: int, piece: int) -> None:
         self.board[row][col] = piece
+        self.print_board()
 
     
     def next_turn(self):
