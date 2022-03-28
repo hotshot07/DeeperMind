@@ -19,7 +19,7 @@ class Game:
         self.width = self.col_count * SQUARESIZE
         self.height = (self.row_count +1) * SQUARESIZE
         self._init_screen()
-        self._init_font()  
+        self._init_font()
     
 
     def _init_board(self) -> None:
@@ -85,18 +85,27 @@ class Game:
 
 ##-----------Checking-Functions---------------------------------------------------------------------##
 
+    def check_for_win_and_handle(self, piece: int):
+        colour = RED if piece == 1 else YELLOW
+
+        if self.check_for_win(piece):
+                label = self.myfont.render(f"Player {piece} wins!!", 1, colour)
+                text_pos = label.get_rect(centerx=self.screen.get_width()/2, y=10)
+                self.screen.blit(label, text_pos)
+                self.game_over = True
+
     def check_for_win(self, piece: int) -> bool:
 
         # Check horizontal locations for win
         for row in self.board:
-            for i in range(self.row_count- (self.connect-2)):
+            for i in range(self.col_count- (self.connect-1)):
                 horizontal_range = [x for x in row[i:i+self.connect]]
                 if all(x == piece for x in horizontal_range) and len(horizontal_range) > 0:
                     return True
         
         # Check vertical locations for win
         for col in self.board.T:
-            for i in range(self.col_count- (self.connect-1)):
+            for i in range(self.row_count- (self.connect-1)):
                 vertical_range = [x for x in col[i:i+self.connect]]
                 if all([x == piece for x in vertical_range]) and len(vertical_range) > 0:
                     return True
