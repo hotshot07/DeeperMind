@@ -19,8 +19,8 @@ class Game:
         self.width = self.col_count * SQUARESIZE
         self.height = (self.row_count +1) * SQUARESIZE
         self._init_screen()
-        self._init_font()
-    
+        self._init_font()    
+
 
     def _init_board(self) -> None:
         self.board = np.zeros((self.row_count,self.col_count))
@@ -29,6 +29,7 @@ class Game:
 
     def _init_screen(self) -> None:
         pygame.display.init()
+        pygame.display.set_caption(f'Connect {self.connect}')
         self.screen = pygame.display.set_mode(size=(self.width,self.height))
     
 
