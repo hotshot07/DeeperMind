@@ -33,3 +33,9 @@ $python3 game.py {number_rows} {number_columns} {connect_number}
 
 - draw board (pygame)
 - print board (terminal window)
+
+
+## Algos
+
+- DFS & BFS
+- Minimax with alpha beta pruning
