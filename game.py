@@ -6,20 +6,22 @@ import numpy as np
 from settings import *
 
 class Game:
-    def __init__(self, row_count, col_count, connect) -> None:
+    def __init__(self, row_count, col_count, connect, quiet=False) -> None:
         self.pygame = pygame.init()
         logo = pygame.image.load('res/nyan.png')
         pygame.display.set_icon(logo)
         self.col_count = col_count
         self.row_count = row_count
         self.connect = connect
+        self.quiet = quiet  
         self._init_board()
         self.game_over = False
         self.turn = 0
         self.width = self.col_count * SQUARESIZE
         self.height = (self.row_count +1) * SQUARESIZE
         self._init_screen()
-        self._init_font()    
+        self._init_font()
+        
 
 
     def _init_board(self) -> None:
@@ -147,6 +149,8 @@ class Game:
 
     def drop_piece(self, row: int, col: int, piece: int) -> None:
         self.board[row][col] = piece
+        if self.quiet:
+            return
         self.print_board()
 
     
@@ -157,7 +161,9 @@ class Game:
 ##-----------Display-Functions---------------------------------------------------------------------##
 
     def print_board(self) -> None:
-	    print(np.flip(self.board, 0))
+        if self.quiet:
+            return
+        print(np.flip(self.board, 0))
 
 
     def draw_board(self) -> None:

@@ -55,7 +55,7 @@ class agent:
                 if explored.get((r, c), None) == None:
                     #not yet explored
                     explored[(r, c)] = pos
-                    print(f'{pos}, {(r,c)}')
+                    # print(f'{pos}, {(r,c)}')
                     q.append((r,c))
         
         counter = 0
@@ -101,7 +101,7 @@ class agent:
                 if explored.get((r, c), None) == None:
                     #not yet explored
                     explored[(r, c)] = pos
-                    print(f'{pos}, {(r,c)}')
+                    # print(f'{pos}, {(r,c)}')
                     q.append((r,c))
         
         counter = 0
@@ -118,47 +118,64 @@ class agent:
         if self.type == 'dfs': return self.dfs(game_state)
         if self.type == 'bfs': return self.bfs(game_state)
 
+def random_agent(game_state: game.Game):
+    moves = game_state.get_valid_moves()
+    col = random.choice(moves)
+    row = game_state.get_next_open_row(col)
+    game_state.drop_piece(row, col, HUMAN)
+    game_state.check_for_win_and_handle(HUMAN)
+    game_state.next_turn()
+
 
 def setUpArgParser():
     parser = argparse.ArgumentParser()
     parser.add_argument('row_count', type=int, help='Please enter number of rows in board')
     parser.add_argument('column_count', type=int, help='Please enter number of columns in board')
     parser.add_argument('connect', type=int, help='Please enter connect value e.x. connect=4 (connect 4)')
-    parser.add_argument('--agent', type=str, help='Please enter the agent you would like to use (dfs,bfs)')
+    parser.add_argument('agent', type=str, help='Please enter the agent you would like to use (dfs,bfs)')
     args = parser.parse_args()
     return args
 
 
 def main():
     args = setUpArgParser()
-    game_state = game.Game(row_count=args.row_count, col_count=args.column_count, connect=args.connect)
-    ai_agent = agent(args.agent)
+    
+    
+    win_count = 0
+    #play 100 games
+    for i in range(100):
+        game_state = game.Game(row_count=args.row_count, col_count=args.column_count, connect=args.connect, quiet=True)
+        ai_agent = agent(args.agent)
 
 
-    while game_state.game_over != True:
-        if game_state.turn == 0:
-            game_state.process_events()
-            game_state.draw_board()
+        while game_state.game_over != True:
+            if game_state.turn == 0:
+                game_state.process_events()
+                random_agent(game_state)
+                game_state.draw_board()
 
-        else:
-            move = ai_agent.get_move(game_state)
-            if move:
-                game_state.drop_piece(move[0], move[1], AI)
-                game_state.check_for_win_and_handle(AI)
-                game_state.next_turn()
             else:
-                #AI cannot win, draw or lost
-                print('forfeit')
+                move = ai_agent.get_move(game_state)
+                if move:
+                    game_state.drop_piece(move[0], move[1], AI)
+                    game_state.check_for_win_and_handle(AI)
+                    if game_state.check_for_win(AI):
+                        win_count+=1
+                    game_state.next_turn()
+                else:
+                    #AI cannot win, draw or lost
+                    # print('forfeit')
+                    game_state.game_over = True
+                
+
+            game_state.draw_board()
+            if game_state.get_valid_moves() == []:
                 game_state.game_over = True
-            
 
-        game_state.draw_board()
-        if game_state.get_valid_moves() == []:
-            game_state.game_over = True
-
-        if game_state.game_over:
-            game_state.wait()
-
+            # if game_state.game_over:
+            #     game_state.wait()
+        print(f'{win_count}/{i}')
+    print(f'Games won: {win_count}/{i}')
 
 
 if __name__ == '__main__':
