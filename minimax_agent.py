@@ -4,7 +4,7 @@ import math
 import random
 
 
-score = {
+winmap = {
     'Win': 1,
     'Draw': 0,
     'Lose': -1
@@ -19,12 +19,12 @@ def minimax(game_state: game.Game, depth, maximizing_player, alpha, beta):
         global counter
         counter += 1
         if game_state.check_for_win(HUMAN):
-            return score['Lose']
+            return winmap['Lose']
         if game_state.check_for_win(AI):
-            return score['Win']
-        return score['Draw']
+            return winmap['Win']
+        return winmap['Draw']
 
-
+    score = 0
 
     #if maximising: find highest evaluation from position
     if maximizing_player:
@@ -33,11 +33,11 @@ def minimax(game_state: game.Game, depth, maximizing_player, alpha, beta):
         for col in game_state.get_valid_moves():
             row = game_state.get_next_open_row(col)
             game_state.board[row][col] = AI
-            eval = minimax(game_state, depth-1, False, alpha, beta)
+            score += minimax(game_state, depth-1, False, alpha, beta)
             game_state.board[row][col] = 0
-            max_eval = max(max_eval,eval)
+            max_eval = max(max_eval,score)
             
-            alpha = max(alpha, eval)
+            alpha = max(alpha, score)
             if beta<=alpha:
                 break
         return max_eval
@@ -50,11 +50,11 @@ def minimax(game_state: game.Game, depth, maximizing_player, alpha, beta):
         for col in game_state.get_valid_moves():
             row = game_state.get_next_open_row(col)
             game_state.board[row][col] = HUMAN
-            eval = minimax(game_state, depth-1, True, alpha, beta)
+            score += minimax(game_state, depth-1, True, alpha, beta)
             game_state.board[row][col] = 0
-            max_eval = min(min_eval,eval)
+            max_eval = min(min_eval,score)
             
-            beta = min(beta, eval)
+            beta = min(beta, score)
             if beta<=alpha:
                 break
         return max_eval
@@ -76,8 +76,7 @@ def best_move(game_state: game.Game, depth):
             move = [row, col]
         
         #Enbale to show evaluations per move/column
-        # print('eval:', eval, counter)
-        print('Branches explored', counter)
+        print(f'Column: {col}, Score: {eval}, Branches explore: {counter}')
 
     game_state.drop_piece(move[0], move[1], AI)
     game_state.check_for_win_and_handle(AI)
@@ -92,7 +91,7 @@ def random_agent(game_state: game.Game):
     game_state.next_turn()
 
 def main():
-    game_state = game.Game(row_count=5, col_count=6, connect=4)
+    game_state = game.Game(row_count=4, col_count=5, connect=3)
 
     while game_state.game_over != True:
         if game_state.turn == 0:
