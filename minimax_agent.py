@@ -5,9 +5,9 @@ import random
 
 
 winmap = {
-    'Win': 1,
+    'Win': 10,
     'Draw': 0,
-    'Lose': -1
+    'Lose': -10
 }
 
 AI = 2
@@ -103,7 +103,6 @@ def main():
             game_state.draw_board()
         else:
             best_move(game_state, 8)
-            
 
 
         game_state.draw_board()
