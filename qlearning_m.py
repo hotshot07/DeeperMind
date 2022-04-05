@@ -148,6 +148,7 @@ def main(training = False):
     qlearning_agent = Qlearning(game_state)
     
     if training:
+        #should play games against itself and all
         qlearning_agent.learn(iterations = 1)
         
     
@@ -158,6 +159,7 @@ def main(training = False):
         else:
             qlearning_agent.game_state = game_state
             # to be updated by get best move
+            # getBestMove()
             game_state = qlearning_agent.getRandomMove()
 
 
