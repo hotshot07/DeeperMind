@@ -1,3 +1,4 @@
+from turtle import update
 from utils import *
 import game
 import math
@@ -75,7 +76,7 @@ class Qlearning():
           HINT: To pick randomly from a list, use random.choice(list)
         """
         #gets all the legal actions in the current state
-        legalActions = self.getLegalActions(state)
+        legalActions = self.game_state.get_valid_moves()
 
         if random.uniform(0,1) < self.epsilon:
             return random.choice(legalActions)
@@ -104,24 +105,43 @@ class Qlearning():
     def getValue(self, state):
         return self.computeValueFromQValues(state)
     
-    
+    def play_game(self):
+        train_game_state = game.Game(row_count=4, col_count=5, connect=3)
+        
+        while train_game_state.game_over != True:
+            if train_game_state.turn == 0:
+                
+                #get highest value action (column)
+                action = self.getAction(train_game_state)
+                
+                
+
+                
+                update()
+                
+                
+            else:
+                game_state = self.getRandomMove()
+
+
+        game_state.draw_board()
+        if game_state.get_valid_moves() == []:
+            game_state.game_over = True
+
+        if game_state.game_over:
+            game_state.wait()
     
     
     def learn(self, iterations):
         iterations = 1
         for x in range(iterations):
             
+            self.play_game()
             
             
            return 0
-       
-    def update(self, chosen_action):
         
-        state = self.game_state.board.flatten()
-        
-        self.q_values[(state, chosen_action[0])] = (1-self.alpha) * self.getQValue(state, chosen_action[0]) + self.alpha * (reward + self.discount * self.computeValueFromQValues(nextState))
-        
-        
+    
     def getRandomMove(self):
         
         

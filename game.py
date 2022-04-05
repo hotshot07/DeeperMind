@@ -73,10 +73,7 @@ class Game:
 
         if self.is_valid_location(col):
             row = self.get_next_open_row(col)
-<<<<<<< HEAD
-=======
             self.prev_state = deepcopy(self.board) 
->>>>>>> 87d0f98e9dedd8a9c517fc97c16a1d4456937f14
             self.drop_piece(row, col, piece)
 
             if self.check_for_win(piece):
