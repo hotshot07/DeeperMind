@@ -71,6 +71,7 @@ class Qlearning():
         based on the resulting state due to the chosen action
         """
         reward = 0
+        sel
         if (self.game_state.game_over):
             if self.game_state.check_for_win(HUMAN):
                 return self.winmap['Lose']
@@ -91,14 +92,23 @@ def main():
 
     ############ MAKE AGENT LEARNNNNNN ###########
     
+    # playing against a random agent: saving the state+ action as key, 
+    # q vlaue as value is a dictionary
+    # and basicalllt saving that in a json. 
+    
     ##############################################
+    
+    ######## LOAD Q Values FROM JSON ################
+    
+    ##### now you can play agianst agent ###########
+    
     
     while game_state.game_over != True:
         if game_state.turn == 0:
             game_state.process_events()
 
             #enable for random agent
-            # random_agent(game_state)
+            #random_agent(game_state)
 
             game_state.draw_board()
         else:
