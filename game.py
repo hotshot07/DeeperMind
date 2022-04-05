@@ -72,6 +72,7 @@ class Game:
 
         if self.is_valid_location(col):
             row = self.get_next_open_row(col)
+            self.prev
             self.drop_piece(row, col, piece)
 
             if self.check_for_win(piece):
@@ -82,6 +83,8 @@ class Game:
             
             self.next_turn()
 
+    def get_prev_state(self):
+        return self.prev_state 
 
     def wait(self):
         pygame.time.wait(3000)

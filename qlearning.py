@@ -80,7 +80,7 @@ class Qlearning():
         
         prev_state = board.get_prev_state()
         prev = self.getQ(prev_state, chosen_action)
-        result_state = board.get_state()
+        result_state = board
         maxqnew = max([self.getQ(result_state, a) for a in actions])
         self.q[(prev_state, chosen_action)] = prev + self.alpha * ((reward + self.gamma*maxqnew) - prev) 
         # print("Q value for " + str(prev_state) + " and " + str(chosen_action) + " is " + str(self.q[(prev_state, chosen_action)]))   
@@ -89,6 +89,10 @@ class Qlearning():
 def main():
     game_state = game.Game(row_count=4, col_count=5, connect=3)
 
+    ############ MAKE AGENT LEARNNNNNN ###########
+    
+    ##############################################
+    
     while game_state.game_over != True:
         if game_state.turn == 0:
             game_state.process_events()
@@ -107,9 +111,6 @@ def main():
                 
             game_state.game_over = True
                 
-            
-            
-
 
         game_state.draw_board()
         if game_state.get_valid_moves() == []:
