@@ -47,6 +47,19 @@ def computeValueFromQValues(game_state, state):
     return None
 
 def qLearning(game_state, player_type):
+
+    # Sample = R(s,a,s') + gamma*max a'(Q(s',a'))
+        # Q(s',a') => computeValueFromQValues
+        # max a' => computeActionFromQValues
+        # gamma => Hardcoded
+        # R(s,a,s') => Hardcoded. Check if victory
+    
+    # To update the Q value in the table
+    # Q(s,a) <- 
+        # Alpha => set manually
+
+    # Max(Q(s,a)) from all possible actions (all columns not already full)
+
     row = game_state.get_next_open_row(1)
 
     game_state.drop_piece(row, 1, player_type)
@@ -55,9 +68,6 @@ def qLearning(game_state, player_type):
 
 def setUpArgParser():
     parser = argparse.ArgumentParser()
-    # parser.add_argument('row_count', type=int, help='Please enter number of rows in board')
-    # parser.add_argument('column_count', type=int, help='Please enter number of columns in board')
-    # parser.add_argument('connect', type=int, help='Please enter connect value e.x. connect=4 (connect 4)')
     parser.add_argument('training_mode', type=int, help='Please enter if training (True,False)')
     parser.add_argument('iterations', type=int, help='Please enter if training (True,False)')
 
@@ -70,16 +80,15 @@ def main(): # Based on Minimax main()
     game_state = game.Game(row_count=4, col_count=4, connect=3)
     training_mode = args.training_mode
     iterations = args.iterations
-    # training_mode = False
-    # iterations = 5
 
     #### 
     #if its in  training mode, run K number of iterations against a random player 
 
     #else:
     # human plays against q learing 
-    print("Training Mode: ", training_mode)
-    print("Iterations: ", iterations)
+
+    # End goal implementation---------------------------------------
+    """
     if training_mode == 1:
         if iterations%2 == 0: # Play against Minimax when even
             if game_state.turn == 0: 
@@ -95,18 +104,23 @@ def main(): # Based on Minimax main()
             
             else: # Q-Learning Turn
                 None
-
-    game_state.turn = 0
+    """
+    # -----------------------------------------------------------
     while game_state.game_over != True:
+        if training_mode == 1:
+            if game_state.turn == 0: 
+                qLearning(game_state, TRAINING)
+            else:
+                best_move(game_state, 8) # play it against minimax.
 
-        # Playing against a human
-        if game_state.turn == 0: # 
-            game_state.process_events() #What does this do?
-            game_state.draw_board()
-            
-        else:
-            # Call the trainined q-learning table/function
-            qLearning(game_state, AI)
+        else: # Playing against a human
+            if game_state.turn == 0: # 
+                game_state.process_events() #What does this do?
+                game_state.draw_board()
+                
+            else:
+                # Call the trainined q-learning table/function
+                qLearning(game_state, AI)
         
         game_state.draw_board()
         if game_state.get_valid_moves() == []:
