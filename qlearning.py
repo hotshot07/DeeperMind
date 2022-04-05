@@ -88,11 +88,11 @@ class Qlearning():
         pprint(self.q)
 
 def main():
-    game_state = game.Game(row_count=4, col_count=5, connect=3)
+    game_state = game.Game(row_count=3, col_count=4, connect=3)
 
     ############ MAKE AGENT LEARNNNNNN ###########
     
-    # playing against a random agent: saving the state+ action as key, 
+    # playing against a random agent: saving the state+ action as key, ((state),action) -> q_value  
     # q vlaue as value is a dictionary
     # and basicalllt saving that in a json. 
     
@@ -132,3 +132,6 @@ def main():
             
 if __name__ == '__main__':
     main()
+
+
+
