@@ -72,7 +72,6 @@ class Game:
 
         if self.is_valid_location(col):
             row = self.get_next_open_row(col)
-            self.prev
             self.drop_piece(row, col, piece)
 
             if self.check_for_win(piece):
@@ -143,7 +142,7 @@ class Game:
     
 
     def get_next_open_row(self, col: int)  -> int:
-        for r in range(self.col_count):
+        for r in range(self.row_count):
             if self.board[r][col] == 0:
                 return r
     
