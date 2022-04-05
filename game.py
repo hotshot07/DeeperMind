@@ -155,7 +155,7 @@ class Game:
         self.board[row][col] = piece
         if self.quiet:
             return
-        self.print_board()
+        # self.print_board()
 
     
     def next_turn(self):
