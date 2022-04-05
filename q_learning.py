@@ -1,3 +1,4 @@
+from mysqlx import Column
 from utils import *
 import game
 from minimax_agent import *
@@ -11,6 +12,7 @@ import random
 HUMAN = 3
 AI = 2
 TRAINING = 1
+COLUMN = 1
 
 
 q_value_table = {}
@@ -59,8 +61,16 @@ def qLearning(game_state, player_type):
         # Alpha => set manually
 
     # Max(Q(s,a)) from all possible actions (all columns not already full)
+    global COLUMN
+    row = game_state.get_next_open_row(COLUMN)
+    print('Row', row)
 
-    row = game_state.get_next_open_row(1)
+    if row == None:
+        COLUMN = COLUMN + 1
+        row = game_state.get_next_open_row(COLUMN)
+    # if row > 2:
+    #    row = game_state.get_next_open_row(column + 1) 
+    
 
     game_state.drop_piece(row, 1, player_type)
     game_state.check_for_win_and_handle(player_type)
@@ -77,7 +87,7 @@ def setUpArgParser():
 def main(): # Based on Minimax main()
     args = setUpArgParser()
 
-    game_state = game.Game(row_count=4, col_count=4, connect=3)
+    game_state = game.Game(row_count=4, col_count=5, connect=3)
     training_mode = args.training_mode
     iterations = args.iterations
 
@@ -106,14 +116,8 @@ def main(): # Based on Minimax main()
                 None
     """
     # -----------------------------------------------------------
-    while game_state.game_over != True:
-        if training_mode == 1:
-            if game_state.turn == 0: 
-                qLearning(game_state, TRAINING)
-            else:
-                best_move(game_state, 8) # play it against minimax.
-
-        else: # Playing against a human
+    if training_mode != 1: # Playing against a human
+        while game_state.game_over != True:
             if game_state.turn == 0: # 
                 game_state.process_events() #What does this do?
                 game_state.draw_board()
@@ -122,12 +126,38 @@ def main(): # Based on Minimax main()
                 # Call the trainined q-learning table/function
                 qLearning(game_state, AI)
         
-        game_state.draw_board()
-        if game_state.get_valid_moves() == []:
-            game_state.game_over = True
+            game_state.draw_board()
+            if game_state.get_valid_moves() == []:
+                game_state.game_over = True
 
-        if game_state.game_over:
-            game_state.wait()
+            if game_state.game_over:
+                game_state.wait()
+
+    else:
+        counter = 0
+        while (iterations > 0 ):
+            iterations = iterations - 1
+            game_state = game.Game(row_count=4, col_count=5, connect=3)
+            
+            counter = counter + 1
+            print("**************ITERATION ", counter, "****************")
+            while game_state.game_over != True: 
+                if game_state.turn == 0: 
+                    qLearning(game_state, TRAINING)
+                else:
+                    best_move(game_state, 8) # play it against minimax.
+                
+                game_state.draw_board()
+                if game_state.get_valid_moves() == []:
+                    game_state.game_over = True
+                    
+
+                if game_state.game_over:
+                    game_state.wait()
+                
+                
+            
+
 
 
 

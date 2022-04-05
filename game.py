@@ -140,9 +140,10 @@ class Game:
     
 
     def get_next_open_row(self, col: int)  -> int:
-        for r in range(self.col_count):
+        for r in range(self.row_count):
             if self.board[r][col] == 0:
                 return r
+        return None
     
 
 ##-----------Interaction-Functions---------------------------------------------------------------------##
