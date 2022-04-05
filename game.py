@@ -1,3 +1,4 @@
+from copy import deepcopy
 import sys
 import pygame
 import math
@@ -72,7 +73,7 @@ class Game:
 
         if self.is_valid_location(col):
             row = self.get_next_open_row(col)
-            self.prev
+            self.prev_state = deepcopy(self.board) 
             self.drop_piece(row, col, piece)
 
             if self.check_for_win(piece):
