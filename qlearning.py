@@ -71,7 +71,6 @@ class Qlearning():
         based on the resulting state due to the chosen action
         """
         reward = 0
-        sel
         if (self.game_state.game_over):
             if self.game_state.check_for_win(HUMAN):
                 return self.winmap['Lose']

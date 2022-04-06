@@ -181,7 +181,7 @@ def main():
     
     win_count = 0
     #play 100 games
-    for i in range(100000):
+    for i in range(10000):
         game_state = game.Game(row_count=args.row_count, col_count=args.column_count, connect=args.connect, quiet=True)
         ai_agent = agent(args.agent)
 
@@ -192,20 +192,22 @@ def main():
                 move = random_agent(game_state)
                 #capture move in csv
                 # write_to_csv(file, game_state.board, move[1], game_state.col_count)
-                ai_agent.append_actions(game_state.board, move[1], game_state.col_count)
+                
                 
                 game_state.drop_piece(move[0], move[1], HUMAN)
                 game_state.check_for_win_and_handle(HUMAN)
                 game_state.next_turn()
-                game_state.draw_board()
+                #game_state.draw_board()
 
             else:
                 move = ai_agent.get_move(game_state)
+                ai_agent.append_actions(game_state.board, move[1], game_state.col_count)
+                
                 if move:
                     game_state.drop_piece(move[0], move[1], AI)
                     game_state.check_for_win_and_handle(AI)
                     if game_state.check_for_win(AI):
-                        ai_agent.export_moves_to_csv(file)
+                        # ai_agent.export_moves_to_csv(file)
                         win_count+=1
                     game_state.next_turn()
                 else:

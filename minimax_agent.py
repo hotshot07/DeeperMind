@@ -98,11 +98,11 @@ def main():
             game_state.process_events()
 
             #enable for random agent
-            # random_agent(game_state)
+            random_agent(game_state)
 
             game_state.draw_board()
         else:
-            best_move(game_state, 8)
+            best_move(game_state, 4)
 
 
         game_state.draw_board()
