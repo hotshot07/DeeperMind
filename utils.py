@@ -6,10 +6,10 @@ import json
 #put in a csv
 
 #append to files
-def create_file():
+def create_file(name):
     if not os.path.exists("data/"):
         os.mkdir("data")
-    file = open("data/demofile.csv", "w", newline="")
+    file = open(f"data/{name}.csv", "w", newline="")
     return file
 
 def create_json_file():

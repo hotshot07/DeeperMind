@@ -3,6 +3,7 @@ import random
 import argparse
 import copy
 from collections import deque
+from unicodedata import name
 import numpy as np
 import csv
 
@@ -175,7 +176,7 @@ def setUpArgParser():
 def main():
     args = setUpArgParser()
     
-    file = create_file()
+    file = create_file(name=f'{args.agent} moves')
     file.write("state,action\n")
     
     
