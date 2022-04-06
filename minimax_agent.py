@@ -173,7 +173,7 @@ def best_move(game_state: game.Game, depth):
     max_eval = -math.inf
     for col in game_state.get_valid_moves():
         row = game_state.get_next_open_row(col)
-        game_state.board[row][col] = AI
+        game_state.board[row][col] = HUMAN
         eval = minimax(game_state, depth-1, False, -math.inf, math.inf)
         game_state.board[row][col] = 0
         if eval > max_eval:
@@ -183,8 +183,8 @@ def best_move(game_state: game.Game, depth):
         #Enbale to show evaluations per move/column
         print(f'Column: {col}, Score: {eval}, Branches explore: {counter}')
 
-    game_state.drop_piece(move[0], move[1], AI)
-    game_state.check_for_win_and_handle(AI)
+    game_state.drop_piece(move[0], move[1], HUMAN)
+    game_state.check_for_win_and_handle(HUMAN)
     game_state.next_turn()
 
 def random_agent(game_state: game.Game):
