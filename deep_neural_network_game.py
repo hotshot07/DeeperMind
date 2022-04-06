@@ -86,7 +86,7 @@ def main():
                 random_move(game_state,HUMAN)
             else:
                 # move2 = neural_network_move(game_state,0.1)
-                move1 = agent_move(ai_agent1,game_state)
+                move1 = agent_move(ai_agent2,game_state)
                 game_state.drop_piece(move1[0],move1[1],HUMAN)
                 game_state.check_for_win_and_handle(HUMAN)
                 game_state.next_turn()
