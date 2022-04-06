@@ -16,7 +16,7 @@ TRAINING = 1
 reward = 1
 gamma = 1
 alpha = 0.8
-epsilon = 0.90
+epsilon = 0.60
 
 q_value_table = {}
 
@@ -249,16 +249,16 @@ def main(): # Based on Minimax main()
             game_state = game.Game(row_count=4, col_count=5, connect=3)
 
             epsilon_decay_counter += 1
-            if epsilon_decay_counter == 200 and epsilon > 0.001:
-                epsilon -= 0.002
+            if epsilon_decay_counter == 50 and epsilon > 0.01:
+                epsilon -= 0.006
                 epsilon_decay_counter = 0
                 
-            print("**************ITERATION ", iterations, "****************")
+            print("**************ITERATION ", iterations, "****************", epsilon)
 
             if iterations%2 == 0: # Play against Minimax when even
-                print("**************ITERATION ", iterations, "****************")
+                print("**************ITERATION ", iterations, "****************", epsilon)
                 while game_state.game_over != True: 
-                    print("**************ITERATION ", iterations, "****************")
+                    print("**************ITERATION ", iterations, "****************", epsilon)
                     if game_state.turn == 0: 
                         qLearning(game_state, TRAINING)
                     else:
@@ -279,7 +279,7 @@ def main(): # Based on Minimax main()
 
             else:
                 while game_state.game_over != True:
-                    print("**************ITERATION ", iterations, "****************")
+                    print("**************ITERATION ", iterations, "****************", epsilon)
                     if game_state.turn == 0: 
                         qLearning(game_state, TRAINING)
                     else:
