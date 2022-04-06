@@ -7,7 +7,7 @@ import numpy as np
 from minimax_agent import best_move
 from basic_search_agent import agent
 import time 
-model = keras.models.load_model('agent_moves')
+model = keras.models.load_model('minimax_neural_75')
 
 
 AI = 2
@@ -68,20 +68,18 @@ def main():
         if game_state.turn == 0:
             game_state.process_events()
 
-            move1 = agent_move(ai_agent1,game_state)
+            #move1 = agent_move(ai_agent1,game_state)
             
-            # move2 = neural_network_move(game_state,0.1)
+            move2 = neural_network_move(game_state,0.1)
             
             # # move_choice = random.choice([move1,move2])
             # print(game_state.print_board())
-            game_state.drop_piece(move1[0],move1[1],HUMAN)
+            game_state.drop_piece(move2[0],move2[1],HUMAN)
             game_state.check_for_win_and_handle(HUMAN)
             game_state.next_turn()
             
-            
-            
         else:
-            #best_move(game_state,9)
+            best_move(game_state,9)
             # move = neural_network_move(game_state,0.1)
             # print(move)
             # print(game_state.print_board())
@@ -89,11 +87,11 @@ def main():
             # game_state.check_for_win_and_handle(AI)
             # game_state.next_turn()
             
-            move2 = agent_move(ai_agent2,game_state)
-            #game_state.drop_piece(move1[0],move1[1],HUMAN)
-            game_state.drop_piece(move2[0],move2[1],AI)
-            game_state.check_for_win_and_handle(AI)
-            game_state.next_turn()
+            # move2 = agent_move(ai_agent1,game_state)
+            # game_state.drop_piece(move1[0],move1[1],HUMAN)
+            # game_state.drop_piece(move2[0],move2[1],AI)
+            # game_state.check_for_win_and_handle(AI)
+            # game_state.next_turn()
             
             time.sleep(2)
 

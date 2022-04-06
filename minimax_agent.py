@@ -4,7 +4,7 @@ import math
 import random
 import numpy as np
 import csv
-
+import time 
 
 winmap = {
     'Win': 10,
@@ -197,12 +197,12 @@ def random_agent(game_state: game.Game):
 
 def main():
     # game_state = game.Game(row_count=4, col_count=5, connect=3)
-    
+    start = time.time()
     file = create_file(name='minimax_moves')
     csv_writer = csv.writer(file)
     csv_writer.writerow(['state']+['action'] )
 
-    for i in range(10000):
+    for i in range(5000):
         game_state = game_state = game.Game(row_count=4, col_count=5, connect=3)
         minimax_agent = Minimax_Agent(file=file)
 
@@ -217,7 +217,7 @@ def main():
             else:
 
                 #minimax's turn
-                minimax_agent.best_move(game_state, 4)
+                minimax_agent.best_move(game_state, 7)
 
 
             game_state.draw_board()
@@ -228,6 +228,10 @@ def main():
             if game_state.game_over:
                 # game_state.wait()
                 minimax_agent.empty_actions()
+    
+    end = time.time() - start 
+    
+    print("total time:", end)
 
 
 
