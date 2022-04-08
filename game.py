@@ -1,3 +1,4 @@
+from copy import deepcopy
 import sys
 import pygame
 import math
@@ -72,6 +73,7 @@ class Game:
 
         if self.is_valid_location(col):
             row = self.get_next_open_row(col)
+            self.prev_state = deepcopy(self.board) 
             self.drop_piece(row, col, piece)
 
             if self.check_for_win(piece):
@@ -82,6 +84,8 @@ class Game:
             
             self.next_turn()
 
+    def get_prev_state(self):
+        return self.prev_state 
 
     def wait(self):
         pygame.time.wait(3000)
@@ -140,7 +144,7 @@ class Game:
     
 
     def get_next_open_row(self, col: int)  -> int:
-        for r in range(self.col_count):
+        for r in range(self.row_count):
             if self.board[r][col] == 0:
                 return r
     
@@ -151,7 +155,7 @@ class Game:
         self.board[row][col] = piece
         if self.quiet:
             return
-        self.print_board()
+        # self.print_board()
 
     
     def next_turn(self):

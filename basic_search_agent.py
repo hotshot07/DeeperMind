@@ -3,6 +3,9 @@ import random
 import argparse
 import copy
 from collections import deque
+from unicodedata import name
+import numpy as np
+import csv
 
 from utils import *
 import game
@@ -21,7 +24,7 @@ counter = 0
 class agent:
     def __init__(self, type):
         self.type = type
-    
+        self.actions = []
     def bfs(self, game_state: game.Game):
         #find best bfs move
         board = copy.deepcopy(game_state.board)
@@ -118,13 +121,46 @@ class agent:
         if self.type == 'dfs': return self.dfs(game_state)
         if self.type == 'bfs': return self.bfs(game_state)
 
+    
+    def append_actions(self, board, col, col_count):
+        action = np.zeros(col_count)
+        action = action.flatten().tolist()
+        action[col] = 1
+
+        state = board.flatten().tolist()
+
+        self.actions.append((state,action))
+        # print(self.actions)
+
+    def export_moves_to_csv(self, file):
+        csv_writer = csv.writer(file)
+        for action in self.actions:
+            csv_writer.writerow([action[0]] + [action[1]])
+
+        #clear recorded actions
+        self.actions = []
+
+
+
 def random_agent(game_state: game.Game):
     moves = game_state.get_valid_moves()
     col = random.choice(moves)
     row = game_state.get_next_open_row(col)
-    game_state.drop_piece(row, col, HUMAN)
-    game_state.check_for_win_and_handle(HUMAN)
-    game_state.next_turn()
+    return row, col
+    
+# def write_to_csv(file, board : np.ndarray, col, column_count):
+#     csv_writer = csv.writer(file)
+
+#     action = np.zeros(column_count)
+#     action[col] = 1
+#     action = action.flatten().tolist()
+
+    
+#     out = board.flatten().tolist()
+#     print(out)
+#     # print( lsitboard.flatten())
+#     # file.write(f'{out}, {action}\n')
+#     csv_writer.writerow([out] + [action])
 
 
 def setUpArgParser():
@@ -140,10 +176,13 @@ def setUpArgParser():
 def main():
     args = setUpArgParser()
     
+    file = create_file(name=f'{args.agent}_moves')
+    file.write("state,action\n")
+    
     
     win_count = 0
     #play 100 games
-    for i in range(100):
+    for i in range(10000):
         game_state = game.Game(row_count=args.row_count, col_count=args.column_count, connect=args.connect, quiet=True)
         ai_agent = agent(args.agent)
 
@@ -151,16 +190,27 @@ def main():
         while game_state.game_over != True:
             if game_state.turn == 0:
                 game_state.process_events()
-                random_agent(game_state)
-                game_state.draw_board()
+                move = random_agent(game_state)
+                #capture move in csv
+                # write_to_csv(file, game_state.board, move[1], game_state.col_count)
+                
+                
+                game_state.drop_piece(move[0], move[1], HUMAN)
+                game_state.check_for_win_and_handle(HUMAN)
+                game_state.next_turn()
+                #game_state.draw_board()
 
             else:
                 move = ai_agent.get_move(game_state)
+                ai_agent.append_actions(game_state.board, move[1], game_state.col_count)
+                
                 if move:
                     game_state.drop_piece(move[0], move[1], AI)
-                    game_state.check_for_win_and_handle(AI)
                     if game_state.check_for_win(AI):
+                        ai_agent.export_moves_to_csv(file)
                         win_count+=1
+                    game_state.check_for_win_and_handle(AI)
+                    
                     game_state.next_turn()
                 else:
                     #AI cannot win, draw or lost
@@ -177,6 +227,6 @@ def main():
         print(f'{win_count}/{i}')
     print(f'Games won: {win_count}/{i}')
 
-
+    file.close()
 if __name__ == '__main__':
     main()
