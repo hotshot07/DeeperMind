@@ -176,7 +176,7 @@ def setUpArgParser():
 def main():
     args = setUpArgParser()
     
-    file = create_file(name=f'{args.agent} moves')
+    file = create_file(name=f'{args.agent}_moves')
     file.write("state,action\n")
     
     
@@ -206,10 +206,11 @@ def main():
                 
                 if move:
                     game_state.drop_piece(move[0], move[1], AI)
-                    game_state.check_for_win_and_handle(AI)
                     if game_state.check_for_win(AI):
-                        # ai_agent.export_moves_to_csv(file)
+                        ai_agent.export_moves_to_csv(file)
                         win_count+=1
+                    game_state.check_for_win_and_handle(AI)
+                    
                     game_state.next_turn()
                 else:
                     #AI cannot win, draw or lost

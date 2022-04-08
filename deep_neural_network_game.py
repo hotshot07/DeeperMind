@@ -22,11 +22,7 @@ def neural_network_move(game_state: game.Game, epsilon):
     values = values.tolist()
     print(values)
     max_val = max(list(values[0]))
-    print(max_val)
     col = values[0].index(max_val)
-    
-    print(col)
-    print(moves)
     
     if col in moves:
         row = game_state.get_next_open_row(col)
@@ -107,6 +103,7 @@ def main():
                 game_state.drop_piece(move2[0],move2[1],AI)
                 game_state.check_for_win_and_handle(AI)
                 game_state.next_turn()
+                print(game_state.print_board())
                 
             move_counter_2+=1
             # move = neural_network_move(game_state,0.1)
@@ -124,7 +121,7 @@ def main():
             
             time.sleep(1)
 
-        print(game_state.print_board())
+        
 
         game_state.draw_board()
         
