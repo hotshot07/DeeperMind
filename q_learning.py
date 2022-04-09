@@ -1,6 +1,6 @@
 from utils import flipCoin
 import game
-from minimax_agent_for_q_learning import *
+from minimax_agent import * #minimax_agent_for_q_learning when QL is player One
 import math
 import argparse
 import numpy as np
@@ -9,9 +9,7 @@ import random
 import json
 import os.path
 
-HUMAN = 3
-AI = 2
-TRAINING = 1
+QL_PLAYER_NUM = 2
 
 reward = 1
 gamma = 1
@@ -24,14 +22,24 @@ def readQTable():
     global q_value_table
     q_value_table_read = {}
 
-    if os.path.exists('Q-tables/q_table_optimised_connect3.json'):
-        with open("Q-tables/q_table_optimised_connect3.json", "r") as f:
-            data = json.load(f)
-            dic = json.loads(data)
-            k = dic.keys()
-            v = dic.values()
-            k1 = [eval(i) for i in k]
-            q_value_table_read = dict(zip(*[k1, v]))
+    if QL_PLAYER_NUM == 1:
+        if os.path.exists('Q-tables/q_table_optimised_connect3.json'):
+            with open("Q-tables/q_table_optimised_connect3.json", "r") as f:
+                data = json.load(f)
+                dic = json.loads(data)
+                k = dic.keys()
+                v = dic.values()
+                k1 = [eval(i) for i in k]
+                q_value_table_read = dict(zip(*[k1, v]))
+    else:
+        if os.path.exists('Q-tables/q_table_optimised_connect3_p2.json'):
+            with open("Q-tables/q_table_optimised_connect3_p2.json", "r") as f:
+                data = json.load(f)
+                dic = json.loads(data)
+                k = dic.keys()
+                v = dic.values()
+                k1 = [eval(i) for i in k]
+                q_value_table_read = dict(zip(*[k1, v]))
 
     q_value_table = q_value_table_read
 
@@ -134,8 +142,8 @@ def update(game_state, state, action):
 
     reward = 0
     if game_state.game_over == True:
-        winner_RL = game_state.check_for_win(1)
-        winner_player2 = game_state.check_for_win(2)
+        winner_RL = game_state.check_for_win(QL_PLAYER_NUM)
+        winner_player2 = game_state.check_for_win(OPPONENT_PLAYER_NUM)
 
         if winner_RL == True:
             reward = 2
@@ -180,15 +188,15 @@ def setUpArgParser():
     return args
 
 
-def random_agent(q_learning_state, q_learning_action, game_state: game.Game):
+def random_agent(q_learning_state, q_learning_action, game_state: game.Game, player_type):
     moves = game_state.get_valid_moves()
     col = random.choice(moves)
     row = game_state.get_next_open_row(col)
-    game_state.drop_piece(row, col, 2)
+    game_state.drop_piece(row, col, player_type)
 
     if game_state.game_over == True:
-        winner_player2 = game_state.check_for_win(2)
-        if winner_player2 == True:
+        winner_random_agent = game_state.check_for_win(player_type)
+        if winner_random_agent == True:
 
             getQValue(q_learning_state, q_learning_action)
             q_value_table[(q_learning_state,
@@ -196,13 +204,18 @@ def random_agent(q_learning_state, q_learning_action, game_state: game.Game):
             q_value_table[(q_learning_state,
                            col)] = 1.5
 
-    game_state.check_for_win_and_handle(2)
+    game_state.check_for_win_and_handle(player_type)
     game_state.next_turn()
     return col
 
 
 def main():  # Based on Minimax main()
-    global epsilon, first_move
+    global epsilon, first_move, OPPONENT_PLAYER_NUM
+
+    if QL_PLAYER_NUM == 1:
+        OPPONENT_PLAYER_NUM = 2
+    else: 
+        OPPONENT_PLAYER_NUM = 1
 
     # read in Q value table
     readQTable()
@@ -221,21 +234,37 @@ def main():  # Based on Minimax main()
 
     if training_mode != 1:  # Playing against a human
         while game_state.game_over != True:
-            if game_state.turn == 0:
-                qLearning(game_state, TRAINING)
+            if QL_PLAYER_NUM == 1: #QL is first player
+                if game_state.turn == 0: 
+                    qLearning(game_state, QL_PLAYER_NUM)
+                
+                else:
+                    game_state.process_events()
+                    game_state.draw_board()
 
-            else:
-                game_state.process_events()
                 game_state.draw_board()
+                if game_state.get_valid_moves() == []:
+                    game_state.game_over = True
 
-            game_state.draw_board()
-            if game_state.get_valid_moves() == []:
-                game_state.game_over = True
+                if game_state.game_over:
+                    game_state.wait()
 
-            if game_state.game_over:
-                game_state.wait()
+            else: #Human is first player
+                if game_state.turn == 0: 
+                    game_state.process_events()
+                    game_state.draw_board()
+                
+                else:
+                    qLearning(game_state, QL_PLAYER_NUM)
 
+                game_state.draw_board()
+                if game_state.get_valid_moves() == []:
+                    game_state.game_over = True
+
+                if game_state.game_over:
+                    game_state.wait() 
     else:  # Training the Q-learning
+
         initial_state = copy.deepcopy(game_state.board)
         getQValue(initial_state, math.floor(game_state.col_count/2))
         print(q_value_table)
@@ -246,7 +275,7 @@ def main():  # Based on Minimax main()
             game_state = game.Game(row_count=4, col_count=5, connect=3)
 
             epsilon_decay_counter += 1
-            if epsilon_decay_counter == 100 and epsilon > 0.01:
+            if epsilon_decay_counter == 2000 and epsilon > 0.04:
                 epsilon -= 0.04
                 epsilon_decay_counter = 0
 
@@ -256,38 +285,57 @@ def main():  # Based on Minimax main()
             if iterations % 2 == 0:  # Play against Minimax when even
                 print("**************ITERATION ", iterations,
                       "****************", epsilon)
+
+
                 while game_state.game_over != True:
                     print("**************ITERATION ", iterations,
                           "****************", epsilon)
-                    if game_state.turn == 0:
-                        q_learning_state = tuple(
-                            map(tuple, copy.deepcopy(game_state.board)))
-                        q_learning_action = qLearning(game_state, TRAINING)
-                    else:
-                        # play it against minimax.
-                        action_minimax = best_move(game_state, 4)
 
-                        # If the previous q-learning action did not prevent minimax from winning, assign negative reward to the previous q-learning action
-                        if game_state.game_over == True:
-                            winner_player2 = game_state.check_for_win(2)
-                            if winner_player2 == True:
 
-                                getQValue(q_learning_state, q_learning_action)
-                                q_value_table[(q_learning_state,
-                                               q_learning_action)] = -2
-                                q_value_table[(q_learning_state,
-                                               action_minimax)] = 1.5
+                    if QL_PLAYER_NUM == 1: #QL is first player
+                        if game_state.turn == 0:
+                            q_learning_state = tuple(
+                                map(tuple, copy.deepcopy(game_state.board)))
+                            q_learning_action = qLearning(game_state, QL_PLAYER_NUM)
+
+                        else:
+                            action_minimax = best_move(game_state, 4)
+                        
+
+                            # If the previous q-learning action did not prevent minimax from winning, assign negative reward to the previous q-learning action
+                            if game_state.game_over == True:
+                                winner_opponent = game_state.check_for_win(OPPONENT_PLAYER_NUM)
+                                if winner_opponent == True:
+                                    getQValue(q_learning_state, q_learning_action)
+                                    q_value_table[(q_learning_state,
+                                                q_learning_action)] = -2
+                                    q_value_table[(q_learning_state,
+                                                action_minimax)] = 1.5
+                    else: #Minimax is first player
+                        if game_state.turn == 0:
+                            action_minimax = best_move(game_state, 4)
+                        else:
+                            q_learning_state = tuple(
+                                map(tuple, copy.deepcopy(game_state.board)))
+                            q_learning_action = qLearning(game_state, QL_PLAYER_NUM)
+
+                            # If the previous q-learning action did not prevent minimax from winning, assign negative reward to the previous q-learning action
+                            if game_state.game_over == True:
+                                winner_opponent = game_state.check_for_win(OPPONENT_PLAYER_NUM)
+                                if winner_opponent == True:
+                                    getQValue(q_learning_state, q_learning_action)
+                                    q_value_table[(q_learning_state,
+                                                q_learning_action)] = -2
+                                    q_value_table[(q_learning_state,
+                                                action_minimax)] = 1.5
 
                     game_state.draw_board()
                     if game_state.get_valid_moves() == []:
                         game_state.game_over = True
 
-                    if game_state.game_over:
-                        game_state.wait()
-
-                if game_state.check_for_win(1):
+                if game_state.check_for_win(QL_PLAYER_NUM):
                     win_counter_RL_against_minimax = win_counter_RL_against_minimax + 1
-                elif game_state.check_for_win(2):
+                elif game_state.check_for_win(OPPONENT_PLAYER_NUM):
                     loss_counter_RL_against_minimax = loss_counter_RL_against_minimax + 1
 
             else:
@@ -300,14 +348,13 @@ def main():  # Based on Minimax main()
                         q_learning_state_random_agent = tuple(
                             map(tuple, copy.deepcopy(game_state.board)))
                         q_learning_action_random_agent = qLearning(
-                            game_state, TRAINING)
+                            game_state, QL_PLAYER_NUM)
                     else:
                         rand_ag_action = random_agent(
-                            q_learning_state_random_agent, q_learning_action_random_agent, game_state)  # play it against random
+                            q_learning_state_random_agent, q_learning_action_random_agent, game_state, OPPONENT_PLAYER_NUM)  # play it against random
                         if game_state.game_over == True:
-                            winner_player2 = game_state.check_for_win(2)
-                            if winner_player2 == True:
-
+                            winner_opponent = game_state.check_for_win(OPPONENT_PLAYER_NUM)
+                            if winner_opponent == True:
                                 getQValue(q_learning_state_random_agent,
                                           q_learning_action_random_agent)
                                 q_value_table[(
@@ -320,12 +367,9 @@ def main():  # Based on Minimax main()
                     if game_state.get_valid_moves() == []:
                         game_state.game_over = True
 
-                    if game_state.game_over:
-                        game_state.wait()
-
-                if game_state.check_for_win(1):
+                if game_state.check_for_win(QL_PLAYER_NUM):
                     win_counter_RL_against_random += 1
-                elif game_state.check_for_win(2):
+                elif game_state.check_for_win(OPPONENT_PLAYER_NUM):
                     loss_counter_RL_against_random += 1
 
         # print('Final Q Table:', print(q_value_table))
@@ -337,11 +381,19 @@ def main():  # Based on Minimax main()
         print('\t Wins Against:', win_counter_RL_against_random)
         print('\t Losses Against:', loss_counter_RL_against_random)
 
-        with open("Q-tables/q_table_optimised_connect3.json", "w") as f:
-            k = q_value_table.keys()
-            v = q_value_table.values()
-            k1 = [str(i) for i in k]
-            json.dump(json.dumps(dict(zip(*[k1, v]))), f)
+        if QL_PLAYER_NUM == 1:
+            with open("Q-tables/q_table_optimised_connect3.json", "w") as f:
+                k = q_value_table.keys()
+                v = q_value_table.values()
+                k1 = [str(i) for i in k]
+                json.dump(json.dumps(dict(zip(*[k1, v]))), f)
+        else:
+            with open("Q-tables/q_table_optimised_connect3_p2.json", "w") as f:
+                k = q_value_table.keys()
+                v = q_value_table.values()
+                k1 = [str(i) for i in k]
+                json.dump(json.dumps(dict(zip(*[k1, v]))), f)
+
 
 
 if __name__ == "__main__":
