@@ -1,6 +1,8 @@
 import utils
 import game
 import argparse
+import random
+
 from arena import Arena
 
 
@@ -16,9 +18,9 @@ def setup_argparser():
     return args
 
 
-def process_move(game_state: game.Game, col, piece):
+def process_move(game_state: game.Game, col, piece, agent):
     row = game_state.get_next_open_row(col)
-    print("agent drops piece", piece)
+    print(f"{agent.__str__} drops piece", piece)
     game_state.drop_piece(row=row,col=col,piece=piece)
 
     #needed for drawing pygame, disable for real speed
@@ -45,7 +47,7 @@ def main():
 
     #create arena
     if args.agent2 == 'all':
-        opponents = ['dfs','bfs','minimax','random']
+        opponents = ['dfs','bfs','minimax','random', 'qlearn', 'nn-minimax', 'nn-bfs', 'nn-hybrid']
     else:
         opponents = [args.agent2]
 
@@ -60,35 +62,65 @@ def main():
         
         arena = Arena(args.agent1, opponent, args.games)
 
+        random_first_move = True 
+        
+        
+        
         #run several games
         for x in range(arena.num_games):
             arena.new_game()
             game_state = game.Game(row_count=args.row_count, col_count=args.column_count, connect=args.connect)
-
+            
+            
+            
+            total_moves_a1 = 0
+            total_moves_a2 = 0
+            
             #Game loop
             while not game_state.game_over:
                 
                 #Player 1 = RED, Player 2 = YELLOW
-
+                
                 if game_state.turn == 0:
                     if len(game_state.get_valid_moves()) == 1:
                         col = game_state.get_valid_moves()[0]
                     else:
                         col = arena.agent_1.get_best_move(game_state)
-                    win = process_move(game_state=game_state, col=col, piece=arena.agent_1.agent_number)
+                        if total_moves_a1 == 0 and random_first_move:
+                            print("total moves agent 1", total_moves_a1)
+                            col = random.randint(0,args.column_count-1)
+                            print("RANDOM MOVE DONE")
+                            
+                        total_moves_a1 = total_moves_a1 + 1
+
+                    win = process_move(game_state=game_state, col=col, piece=arena.agent_1.agent_number, agent=arena.agent_1)
                     if win:
                         arena.victor = arena.agent_1.agent_number
                         arena.agent_2_losses +=1
+                    
+                    game_state.print_board()
                 
                 if game_state.turn == 1:
                     if len(game_state.get_valid_moves()) == 1:
                         col = game_state.get_valid_moves()[0]
                     else:
                         col = arena.agent_2.get_best_move(game_state)
-                    win = process_move(game_state=game_state, col=col, piece=arena.agent_2.agent_number)
+                        if total_moves_a2 == 0 and random_first_move:
+                            print("total moves agent 2", total_moves_a2)
+                            col = random.randint(0,args.column_count-1)
+                            print("RANDOM MOVE DONE")
+                            
+                        total_moves_a2 = total_moves_a2 + 1
+                            
+                    win = process_move(game_state=game_state, col=col, piece=arena.agent_2.agent_number, agent=arena.agent_2)
                     if win:
                         arena.victor = arena.agent_2.agent_number
                         arena.agent_2_wins +=1
+
+                    game_state.print_board()
+                        
+            total_moves_a1 = 0
+            total_moves_a2 = 0
             
             if arena.victor == None:
                 arena.agent_2_ties +=1

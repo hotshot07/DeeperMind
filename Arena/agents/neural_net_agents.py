@@ -34,7 +34,11 @@ class BaseNeuralAgent:
         # sorts by value in reverse 
         prob_dict_sorted = {k: v for k, v in sorted(probability_dict.items(), key=lambda item: item[1], reverse=True)}
 
+        print(prob_dict_sorted)
+       
         for column, probability in prob_dict_sorted.items():
+            print("top move:",column)
+            print("move available",moves)
             if column in moves:
                 return column
             

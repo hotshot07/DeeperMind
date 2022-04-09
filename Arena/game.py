@@ -156,7 +156,13 @@ class Game:
 ##-----------Interaction-Functions---------------------------------------------------------------------##
 
     def drop_piece(self, row: int, col: int, piece: int) -> None:
+        print("row", self.row_count)
+        print("col", self.col_count)
+        print(self.board.shape)
         self.board[row][col] = piece
+        
+        
+        
         if self.quiet:
             return
         # self.print_board()
