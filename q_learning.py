@@ -1,6 +1,6 @@
 from utils import flipCoin
 import game
-from minimax_agent import *
+from minimax_agent_for_q_learning import *
 import math
 import argparse
 import numpy as np
@@ -16,7 +16,7 @@ TRAINING = 1
 reward = 1
 gamma = 1
 alpha = 0.3
-epsilon = 0.3
+epsilon = 0.4
 q_value_table = {}
 
 
@@ -24,8 +24,8 @@ def readQTable():
     global q_value_table
     q_value_table_read = {}
 
-    if os.path.exists('Q-tables/q_table_connect3.json'):
-        with open("Q-tables/q_table_connect3.json", "r") as f:
+    if os.path.exists('Q-tables/q_table_optimised_connect3.json'):
+        with open("Q-tables/q_table_optimised_connect3.json", "r") as f:
             data = json.load(f)
             dic = json.loads(data)
             k = dic.keys()
@@ -37,7 +37,13 @@ def readQTable():
 
 
 def getQValue(state, action):
-    if q_value_table.get((state, action)) is None:
+    global first_move
+    if first_move:
+        state = tuple(map(tuple, state))
+        if q_value_table.get((state, action)) is None:
+            q_value_table[(state, action)] = 50
+            first_move = False
+    elif q_value_table.get((state, action)) is None:
         q_value_table[(state, action)] = 0
 
     return q_value_table[(state, action)]
@@ -148,8 +154,10 @@ def update(game_state, state, action):
 
 
 def qLearning(game_state, player_type):
+    global first_move
     state = copy.deepcopy(game_state.board)
     state = tuple(map(tuple, state))
+    
     best_action = getAction(game_state, state)
 
     row = game_state.get_next_open_row(best_action)
@@ -194,7 +202,7 @@ def random_agent(q_learning_state, q_learning_action, game_state: game.Game):
 
 
 def main():  # Based on Minimax main()
-    global epsilon
+    global epsilon, first_move
 
     # read in Q value table
     readQTable()
@@ -203,6 +211,7 @@ def main():  # Based on Minimax main()
     game_state = game.Game(row_count=4, col_count=5, connect=3)
     training_mode = args.training_mode
     iterations = args.iterations
+    first_move = True
 
     epsilon_decay_counter = 0
     win_counter_RL_against_minimax = 0
@@ -227,6 +236,9 @@ def main():  # Based on Minimax main()
                 game_state.wait()
 
     else:  # Training the Q-learning
+        initial_state = copy.deepcopy(game_state.board)
+        getQValue(initial_state, math.floor(game_state.col_count/2))
+        print(q_value_table)
         q_learning_state = None
         q_learning_action = None
         while (iterations > 0):
@@ -235,7 +247,7 @@ def main():  # Based on Minimax main()
 
             epsilon_decay_counter += 1
             if epsilon_decay_counter == 100 and epsilon > 0.01:
-                epsilon -= 0.018
+                epsilon -= 0.04
                 epsilon_decay_counter = 0
 
             print("**************ITERATION ", iterations,
@@ -325,7 +337,7 @@ def main():  # Based on Minimax main()
         print('\t Wins Against:', win_counter_RL_against_random)
         print('\t Losses Against:', loss_counter_RL_against_random)
 
-        with open("Q-tables/q_table_connect3xx.json", "w") as f:
+        with open("Q-tables/q_table_optimised_connect3.json", "w") as f:
             k = q_value_table.keys()
             v = q_value_table.values()
             k1 = [str(i) for i in k]

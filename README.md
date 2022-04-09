@@ -51,3 +51,5 @@ i.e
 To play, set Training Mode to either 1 or 0.
 1 = Training Mode ON
 0 = Training Mode OFF
+
+Q-learning uses its own Minimax file, minimax_agent_for_q_learning.py. This is because the q-learning agent must be the first one to start (because of the way we codede it)
