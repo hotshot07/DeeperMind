@@ -4,6 +4,7 @@ import copy
 import random
 import json
 import os.path
+import os
 
 gamma = 1
 alpha = 0.25
@@ -22,15 +23,15 @@ class Q_learning_agent:
     def readQTable(self):
         global q_value_table
         q_value_table_read = {}
-
-        if os.path.exists('q_tables/q_table_connect3.json'):
-            with open("q_tables/q_table_connect3.json", "r") as f:
-                data = json.load(f)
-                dic = json.loads(data)
-                k = dic.keys()
-                v = dic.values()
-                k1 = [eval(i) for i in k]
-                q_value_table_read = dict(zip(*[k1, v]))
+        print("LIST DIR ", os.listdir(os.getcwd()))
+        # if os.path.exists('agents/q_tables/q_table_optimised_connect3.json'):
+        with open("agents/q_tables/q_table_optimised_connect3.json", "r") as f:
+            data = json.load(f)
+            dic = json.loads(data)
+            k = dic.keys()
+            v = dic.values()
+            k1 = [eval(i) for i in k]
+            q_value_table_read = dict(zip(*[k1, v]))
 
         q_value_table = q_value_table_read
 
