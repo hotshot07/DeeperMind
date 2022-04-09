@@ -4,13 +4,13 @@ import numpy as np
 import csv
 import game
 from tensorflow import keras
+import os 
 
 # Parent class 
 class BaseNeuralAgent:
-    def __init__(self, agent_number):
+    def __init__(self, agent_number, model):
         self.agent_number = agent_number
-        self.actions = []
-        self.model = None 
+        self.model = model  
 
     def get_best_move(self, game_state: game.Game):
         moves = game_state.get_valid_moves()
@@ -40,19 +40,20 @@ class BaseNeuralAgent:
 
 class NNHybridAgent(BaseNeuralAgent):
     def __init__(self, agent_number):
-        model = keras.models.load_model('models/hybrid_model')
+        model = keras.models.load_model('agents/models/hybrid_model')
         super().__init__(agent_number, model)
         
 
 class NNBfsAgent(BaseNeuralAgent):
     def __init__(self, agent_number):
-        model = keras.models.load_model('models/bfs_model')
+        model = keras.models.load_model('agents/models/bfs_model')
         super().__init__(agent_number, model)
         
         
 class NNMinimaxAgent(BaseNeuralAgent):
     def __init__(self, agent_number):
-        model = keras.models.load_model('models/minimax_neural_75')
+        print(os.listdir())
+        model = keras.models.load_model('agents/models/minimax_neural_75')
         super().__init__(agent_number, model)   
         
         
