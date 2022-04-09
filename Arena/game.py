@@ -22,6 +22,7 @@ class Game:
         self.height = (self.row_count +1) * SQUARESIZE
         self._init_screen()
         self._init_font()
+        self.winner = None
         
 
 
@@ -61,7 +62,8 @@ class Game:
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.draw.rect(self.screen, BLACK, (0,0, self.width, SQUARESIZE))
-                self.player_turn(event)            
+                col = self.player_turn(event)
+                return col     
             
 
     def player_turn(self, event):
@@ -72,17 +74,19 @@ class Game:
         col = int(math.floor(posx/SQUARESIZE))
 
         if self.is_valid_location(col):
-            row = self.get_next_open_row(col)
+            # row = self.get_next_open_row(col)
             self.prev_state = deepcopy(self.board) 
-            self.drop_piece(row, col, piece)
+            # self.drop_piece(row, col, piece) #commented our for arena
 
-            if self.check_for_win(piece):
-                label = self.myfont.render(f"Player {piece} wins!!", 1, colour)
-                text_pos = label.get_rect(centerx=self.screen.get_width()/2, y=10)
-                self.screen.blit(label, text_pos)
-                self.game_over = True
+            # if self.check_for_win(piece):
+            #     label = self.myfont.render(f"Player {piece} wins!!", 1, colour)
+            #     text_pos = label.get_rect(centerx=self.screen.get_width()/2, y=10)
+            #     self.screen.blit(label, text_pos)
+            #     self.game_over = True
             
-            self.next_turn()
+            # self.next_turn()
+
+            return col
 
     def get_prev_state(self):
         return self.prev_state 
@@ -147,7 +151,6 @@ class Game:
         for r in range(self.row_count):
             if self.board[r][col] == 0:
                 return r
-        return None
     
 
 ##-----------Interaction-Functions---------------------------------------------------------------------##
