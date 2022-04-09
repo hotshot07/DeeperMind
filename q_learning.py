@@ -276,7 +276,7 @@ def main():  # Based on Minimax main()
             game_state = game.Game(row_count=4, col_count=5, connect=3)
 
             epsilon_decay_counter += 1
-            if epsilon_decay_counter == 100 and epsilon > 0.01:
+            if epsilon_decay_counter == 200 and epsilon > 0.04:
                 epsilon -= 0.04
                 epsilon_decay_counter = 0
 
@@ -334,8 +334,8 @@ def main():  # Based on Minimax main()
                     if game_state.get_valid_moves() == []:
                         game_state.game_over = True
 
-                    if game_state.game_over:
-                        game_state.wait()
+                    # if game_state.game_over:
+                    #     game_state.wait()
 
                 if game_state.check_for_win(QL_PLAYER_NUM):
                     win_counter_RL_against_minimax = win_counter_RL_against_minimax + 1
@@ -371,8 +371,8 @@ def main():  # Based on Minimax main()
                     if game_state.get_valid_moves() == []:
                         game_state.game_over = True
 
-                    if game_state.game_over:
-                        game_state.wait()
+                    # if game_state.game_over:
+                    #     game_state.wait()
 
                 if game_state.check_for_win(QL_PLAYER_NUM):
                     win_counter_RL_against_random += 1
