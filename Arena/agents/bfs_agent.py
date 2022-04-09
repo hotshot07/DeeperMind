@@ -46,14 +46,17 @@ class Bfs_agent:
                     q.append((r,c))
         
         counter = 0
+
         while explored.get(final, None) not in ['start', None]:
             counter +=1
             final = explored.get(final, None)
-        
         #reset board state
         game_state.board = board
         #return best bfs move
-        return final[1]
+        if final:
+            return final[1]
+        else:
+            return game_state.get_valid_moves()[0]
     
 
     
