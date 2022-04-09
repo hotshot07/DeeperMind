@@ -1,5 +1,3 @@
-# from utils import *
-from ast import arg
 import utils
 import game
 import argparse
