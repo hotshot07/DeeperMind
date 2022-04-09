@@ -147,6 +147,7 @@ class Game:
         for r in range(self.row_count):
             if self.board[r][col] == 0:
                 return r
+        return None
     
 
 ##-----------Interaction-Functions---------------------------------------------------------------------##

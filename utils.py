@@ -2,15 +2,20 @@
 import os
 import csv
 import json
+import random
 
-#put in a csv
 
-#append to files
+# put in a csv
+
+# append to files
+
+
 def create_file(name):
     if not os.path.exists("data/"):
         os.mkdir("data")
     file = open(f"data/{name}.csv", "w", newline="")
     return file
+
 
 def create_json_file():
     if not os.path.exists("qlearn/"):
@@ -26,3 +31,7 @@ def load_from_json():
 # csv_writer = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 # csv_writer.writerow([])
 
+
+def flipCoin(p):
+    r = random.random()
+    return r < p
