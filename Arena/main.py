@@ -1,4 +1,4 @@
-# from utils import *
+import utils
 import game
 import argparse
 from arena import Arena
@@ -11,6 +11,7 @@ def setup_argparser():
     parser.add_argument('connect', type=int, help='Please enter connect value e.x. connect=4 (connect 4)')
     parser.add_argument('--agent1', type=str, help='Please enter agent 1 name')
     parser.add_argument('--agent2', type=str, help='Please enter agent 2 name')
+    parser.add_argument('--games', type=int, help='Please enter agent number of games')
     args = parser.parse_args()
     return args
 
@@ -26,7 +27,7 @@ def process_move(game_state: game.Game, col, piece):
 
     #check if just won
     if game_state.check_for_win(piece):
-        print("this agent just won")
+        print("this agent just won", piece)
         game_state.game_over = True
         return True
 
@@ -40,52 +41,63 @@ def process_move(game_state: game.Game, col, piece):
 
 def main():
     args = setup_argparser()
-    
+    opponents = []
+
     #create arena
-    arena = Arena(args.agent1, args.agent2)
-    #create game
-    game_state = game.Game(row_count=args.row_count, col_count=args.column_count, connect=args.connect)
-
-
-	# initial draw
-    game_state.draw_board()
-    game_state.update()
-
-	#Game loop
-    while not game_state.game_over:
-        
-    	#Player 1 = RED, Player 2 = YELLOW
-
-        if game_state.turn == 0:
-            if len(game_state.get_valid_moves()) == 1:
-                col = game_state.get_valid_moves()[0]
-            else:
-                col = arena.agent_1.get_best_move(game_state)
-            win = process_move(game_state=game_state, col=col, piece=arena.agent_1.agent_number)
-            if win:
-                arena.victor = arena.agent_1.agent_number
-        
-        if game_state.turn == 1:
-            if len(game_state.get_valid_moves()) == 1:
-                col = game_state.get_valid_moves()[0]
-            else:
-                col = arena.agent_2.get_best_move(game_state)
-            win = process_move(game_state=game_state, col=col, piece=arena.agent_2.agent_number)
-            if win:
-                arena.victor = arena.agent_2.agent_number
-        
-        
-        
-        
-    
-    print('-'*40)
-    print('game over')
-    if arena.victor:
-        print(f'victor = {arena.victor}')
+    if args.agent2 == 'all':
+        opponents = ['dfs','bfs','minimax','random']
     else:
-        print(f'Tie')
+        opponents = [args.agent2]
 
-    game_state.wait()
+    #create a file to contain test results
+    file = utils.create_file(args.agent1)
+    utils.write_col_names(file)
+    
+    for opponent in opponents:
+
+        if opponent == args.agent1:
+            continue
+        
+        arena = Arena(args.agent1, opponent, args.games)
+
+        #run several games
+        for x in range(arena.num_games):
+            arena.new_game()
+            game_state = game.Game(row_count=args.row_count, col_count=args.column_count, connect=args.connect)
+
+            #Game loop
+            while not game_state.game_over:
+                
+                #Player 1 = RED, Player 2 = YELLOW
+
+                if game_state.turn == 0:
+                    if len(game_state.get_valid_moves()) == 1:
+                        col = game_state.get_valid_moves()[0]
+                    else:
+                        col = arena.agent_1.get_best_move(game_state)
+                    win = process_move(game_state=game_state, col=col, piece=arena.agent_1.agent_number)
+                    if win:
+                        arena.victor = arena.agent_1.agent_number
+                        arena.agent_2_losses +=1
+                
+                if game_state.turn == 1:
+                    if len(game_state.get_valid_moves()) == 1:
+                        col = game_state.get_valid_moves()[0]
+                    else:
+                        col = arena.agent_2.get_best_move(game_state)
+                    win = process_move(game_state=game_state, col=col, piece=arena.agent_2.agent_number)
+                    if win:
+                        arena.victor = arena.agent_2.agent_number
+                        arena.agent_2_wins +=1
+            
+            if arena.victor == None:
+                arena.agent_2_ties +=1
+            
+        utils.write_to_file(file, opponent, wins=arena.agent_2_wins, ties=arena.agent_2_ties, losses=arena.agent_2_losses)  
+        
+        print('-'*40)
+        print('game over')
+        print(f'(Agent 2) Wins:{arena.agent_2_wins}, Ties:{arena.agent_2_ties}, Losses:{arena.agent_2_losses}')
 
 if __name__ == '__main__':
     main()
