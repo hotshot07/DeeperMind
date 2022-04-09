@@ -15,23 +15,51 @@ HUMAN = 1
 
 def neural_network_move(game_state: game.Game, epsilon):
     
+    # moves = game_state.get_valid_moves()
+    
+    # values = model.predict(np.array(game_state.board.flatten().reshape(1,20)))
+    
+    # values = values.tolist()
+    # print(values)
+    # max_val = max(list(values[0]))
+    # col = values[0].index(max_val)
+    
+    # if col in moves:
+    #     row = game_state.get_next_open_row(col)
+        
+    #     return (row,col)
+    # else:
+    #     col = random.choice(moves) 
+    #     row = game_state.get_next_open_row(col)
+    #     return (row,col)
+    
+    
     moves = game_state.get_valid_moves()
     
-    values = model.predict(np.array(game_state.board.flatten().reshape(1,20)))
+    probability_vector = model.predict(np.array(game_state.board.flatten().reshape(1,20)))
+    probability_list = probability_vector.tolist()[0]
     
-    values = values.tolist()
-    print(values)
-    max_val = max(list(values[0]))
-    col = values[0].index(max_val)
-    
-    if col in moves:
-        row = game_state.get_next_open_row(col)
+    print(probability_vector)
+    print(probability_list)
+        # [ 0.3, 0.4, 0.2 0.1 , 0.0 ]
+        # to 
+        # {
+        #     0: 0.3,
+        #     1 :0.4
+        #     ...
+        # }
         
-        return (row,col)
-    else:
-        col = random.choice(moves) 
-        row = game_state.get_next_open_row(col)
-        return (row,col)
+    probability_dict = { index:val for index,val in enumerate(probability_list)}
+    print(probability_dict)
+        # sorts by value
+    prob_dict_sorted = {k: v for k, v in sorted(probability_dict.items(), key=lambda item: item[1], reverse=True)}
+    print(prob_dict_sorted)
+    
+    for column, probability in prob_dict_sorted.items():
+        if column in moves:
+            row = game_state.get_next_open_row(column)
+            
+            return (row, column) 
         
 
     # if random.random() > epsilon:
