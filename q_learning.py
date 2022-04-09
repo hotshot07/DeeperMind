@@ -16,7 +16,7 @@ TRAINING = 1
 reward = 1
 gamma = 1
 alpha = 0.3
-epsilon = 0.3
+epsilon = 0.1
 q_value_table = {}
 
 
@@ -208,7 +208,7 @@ def main():  # Based on Minimax main()
     readQTable()
 
     args = setUpArgParser()
-    game_state = game.Game(row_count=6, col_count=7, connect=3)
+    game_state = game.Game(row_count=4, col_count=5, connect=3)
     training_mode = args.training_mode
     iterations = args.iterations
     first_move = True
@@ -243,6 +243,7 @@ def main():  # Based on Minimax main()
         q_learning_action = None
         while (iterations > 0):
             iterations = iterations - 1
+            game_state = game.Game(row_count=4, col_count=5, connect=3)
 
             epsilon_decay_counter += 1
             if epsilon_decay_counter == 100 and epsilon > 0.01:
