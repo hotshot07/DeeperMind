@@ -24,8 +24,8 @@ def readQTable():
     global q_value_table
     q_value_table_read = {}
 
-    if os.path.exists('Q-tables/q_table_connect3.json'):
-        with open("Q-tables/q_table_connect3.json", "r") as f:
+    if os.path.exists('Q-tables/q_table_optimised_connect3.json'):
+        with open("Q-tables/q_table_optimised_connect3.json", "r") as f:
             data = json.load(f)
             dic = json.loads(data)
             k = dic.keys()
@@ -205,10 +205,10 @@ def main():  # Based on Minimax main()
     global epsilon, first_move
 
     # read in Q value table
-    # readQTable()
+    readQTable()
 
     args = setUpArgParser()
-    game_state = game.Game(row_count=6, col_count=7, connect=4)
+    game_state = game.Game(row_count=6, col_count=7, connect=3)
     training_mode = args.training_mode
     iterations = args.iterations
     first_move = True
@@ -243,7 +243,6 @@ def main():  # Based on Minimax main()
         q_learning_action = None
         while (iterations > 0):
             iterations = iterations - 1
-            #game_state = game.Game(row_count=4, col_count=5, connect=3)
 
             epsilon_decay_counter += 1
             if epsilon_decay_counter == 100 and epsilon > 0.01:
@@ -337,11 +336,11 @@ def main():  # Based on Minimax main()
         print('\t Wins Against:', win_counter_RL_against_random)
         print('\t Losses Against:', loss_counter_RL_against_random)
 
-        # with open("Q-tables/q_table_connect3xx.json", "w") as f:
-        #     k = q_value_table.keys()
-        #     v = q_value_table.values()
-        #     k1 = [str(i) for i in k]
-        #     json.dump(json.dumps(dict(zip(*[k1, v]))), f)
+        with open("Q-tables/q_table_optimised_connect3.json", "w") as f:
+            k = q_value_table.keys()
+            v = q_value_table.values()
+            k1 = [str(i) for i in k]
+            json.dump(json.dumps(dict(zip(*[k1, v]))), f)
 
 
 if __name__ == "__main__":
