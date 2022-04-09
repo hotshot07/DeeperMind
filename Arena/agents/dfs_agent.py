@@ -53,7 +53,10 @@ class Dfs_agent:
         #reset board state
         game_state.board = board
         #return best bfs move
-        return final[1]
+        if final:
+            return final[1]
+        else:
+            return game_state.get_valid_moves()[0]
     
 
     
