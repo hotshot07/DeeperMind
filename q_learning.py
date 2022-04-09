@@ -10,7 +10,6 @@ import json
 import os.path
 
 QL_PLAYER_NUM = 2
-# OPPONENT_PLAYER_NUM = 1
 
 reward = 1
 gamma = 1
@@ -334,9 +333,6 @@ def main():  # Based on Minimax main()
                     if game_state.get_valid_moves() == []:
                         game_state.game_over = True
 
-                    # if game_state.game_over:
-                    #     game_state.wait()
-
                 if game_state.check_for_win(QL_PLAYER_NUM):
                     win_counter_RL_against_minimax = win_counter_RL_against_minimax + 1
                 elif game_state.check_for_win(OPPONENT_PLAYER_NUM):
@@ -370,9 +366,6 @@ def main():  # Based on Minimax main()
                     game_state.draw_board()
                     if game_state.get_valid_moves() == []:
                         game_state.game_over = True
-
-                    # if game_state.game_over:
-                    #     game_state.wait()
 
                 if game_state.check_for_win(QL_PLAYER_NUM):
                     win_counter_RL_against_random += 1
