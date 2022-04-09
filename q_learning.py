@@ -276,7 +276,7 @@ def main():  # Based on Minimax main()
             game_state = game.Game(row_count=4, col_count=5, connect=3)
 
             epsilon_decay_counter += 1
-            if epsilon_decay_counter == 200 and epsilon > 0.04:
+            if epsilon_decay_counter == 2000 and epsilon > 0.04:
                 epsilon -= 0.04
                 epsilon_decay_counter = 0
 
