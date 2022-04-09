@@ -6,7 +6,9 @@ from agents import random_agent
 from agents import dfs_agent
 from agents import human_agent
 from agents import minimax_agent
+from agents import neural_net_agents
 from agents import q_learning_agent
+
 # import agents.random_agent
 
 
@@ -37,8 +39,14 @@ class Arena:
         if agent_string == 'qlearn':
             return q_learning_agent.Q_learning_agent(agent_number)
             pass
-        if agent_string == 'nn':
-            pass
+        if agent_string == 'nn-minimax':
+            return neural_net_agents.NNMinimaxAgent(agent_number)
+        if agent_string == 'nn-bfs':
+            return neural_net_agents.NNBfsAgent(agent_number)
+        if agent_string == 'nn-hybrid':
+            return neural_net_agents.NNHybridAgent(agent_number)
+        
+            
         if agent_string == 'human':
             return human_agent.Human_agent(agent_number)
     
