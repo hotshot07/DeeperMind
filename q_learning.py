@@ -16,7 +16,7 @@ TRAINING = 1
 reward = 1
 gamma = 1
 alpha = 0.3
-epsilon = 0.01
+epsilon = 0.3
 q_value_table = {}
 
 
@@ -50,16 +50,9 @@ def computeValueFromQValues(game_state, state):
     there are no legal actions, which is the case at the
     terminal state, you should return a value of 0.0.
     """
-
-    # state is (row,col)
-    # for each possible action in the current state
-    # find the max q value
-
     max_q_value = -math.inf
     actions = game_state.get_valid_moves()
     for column_action in actions:
-        # column_action is a column number
-        # get the q value for that action
         q_value = getQValue(state, column_action)
         if q_value > max_q_value:
             max_q_value = q_value
@@ -73,10 +66,8 @@ def computeMaxActionFromQValues(game_state, state):
         are no legal actions, which is the case at the terminal state,
         you should return None.
     """
-
     # state is (row,col)
-    # for each possible action in the current state
-    # find the max q value
+    # for each possible action in the current state find the max q value
 
     max_q_value = -math.inf
     best_legal_action_in_state = None
@@ -98,13 +89,10 @@ def computeActionFromQValues(game_state):
     state = copy.deepcopy(game_state.board)
 
     for action in game_state.get_valid_moves():
-        # print(type(state))
         state = tuple(map(tuple, state))
 
-        # print(state)
-        # print(type(state))
         max_q_value = computeValueFromQValues(game_state, state)
-        # print('Max Q value: ', max_q_value)
+
         sample = reward + gamma*max_q_value
         current_q_value = getQValue(state, action)
 
@@ -122,11 +110,7 @@ def getAction(game_state, state):
         take the best policy action otherwise.  Note that if there are
         no legal actions, which is the case at the terminal state, you
         should choose None as the action.
-
-        HINT: You might want to use util.flipCoin(prob)
-        HINT: To pick randomly from a list, use random.choice(list)
     """
-    # Legal Actions from present state
     legalActions = game_state.get_valid_moves()
     print('Legal Actions in get epsilon action', legalActions)
     action = None
@@ -153,7 +137,6 @@ def update(game_state, state, action):
             reward = -2
         else:
             reward = 0.5
-
     # else:
     #     reward = 0.5
 
@@ -162,31 +145,14 @@ def update(game_state, state, action):
 
     # update q value in q table
     q_value_table[(state, action)] = new_q_value
-    # print(q_value_table)
 
 
 def qLearning(game_state, player_type):
-
-    # Sample = R(s,a,s') + gamma*max a'(Q(s',a'))
-    # max a'(Q(s',a')) => computeValueFromQValues
-    # gamma => Hardcoded
-    # R(s,a,s') => Hardcoded. Check if victory
-
-    # To update the Q value in the table
-    # Q(s,a) <- (1-Alpha)Q(s,a) + (Alpha)(sample)=> computeActionFromQValues
-    # Alpha => set manually
-    # Q(s,a) => getQValue
-
-    # Max(Q(s,a)) from all possible actions (all columns not already full)
-
     state = copy.deepcopy(game_state.board)
-    # state = np.array2string(state, separator='((')
     state = tuple(map(tuple, state))
     best_action = getAction(game_state, state)
-    # print('Best Action', best_action)
 
     row = game_state.get_next_open_row(best_action)
-    # print('Row', row)
     update(game_state, state, best_action)
 
     game_state.drop_piece(row, best_action, player_type)
@@ -243,8 +209,6 @@ def main():  # Based on Minimax main()
     loss_counter_RL_against_minimax = 0
     win_counter_RL_against_random = 0
     loss_counter_RL_against_random = 0
-    # Q-learning algo needs to be the first to make move, otherwise fix the check win
-    # logic in the update() function
 
     if training_mode != 1:  # Playing against a human
         while game_state.game_over != True:
@@ -252,7 +216,7 @@ def main():  # Based on Minimax main()
                 qLearning(game_state, TRAINING)
 
             else:
-                game_state.process_events()  # What does this do?
+                game_state.process_events()
                 game_state.draw_board()
 
             game_state.draw_board()
