@@ -16,7 +16,7 @@ TRAINING = 1
 reward = 1
 gamma = 1
 alpha = 0.3
-epsilon = 0.1
+epsilon = 0.4
 q_value_table = {}
 
 
@@ -247,7 +247,7 @@ def main():  # Based on Minimax main()
 
             epsilon_decay_counter += 1
             if epsilon_decay_counter == 100 and epsilon > 0.01:
-                epsilon -= 0.018
+                epsilon -= 0.04
                 epsilon_decay_counter = 0
 
             print("**************ITERATION ", iterations,
