@@ -2,6 +2,8 @@
 import os
 import csv
 import json
+import random
+
 
 # put in a csv
 
@@ -28,3 +30,8 @@ def load_from_json():
     return json_qvals
 # csv_writer = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 # csv_writer.writerow([])
+
+
+def flipCoin(p):
+    r = random.random()
+    return r < p
