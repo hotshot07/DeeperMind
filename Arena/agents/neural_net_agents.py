@@ -5,6 +5,9 @@ import csv
 import game
 from tensorflow import keras
 import os 
+import tensorflow as tf
+tf.get_logger().setLevel('ERROR')
+
 
 # Parent class 
 class BaseNeuralAgent:
@@ -29,9 +32,8 @@ class BaseNeuralAgent:
         probability_dict = { index:val for index,val in enumerate(probability_list)}
         
         # sorts by value in reverse 
-        
         prob_dict_sorted = {k: v for k, v in sorted(probability_dict.items(), key=lambda item: item[1], reverse=True)}
-        
+
         for column, probability in prob_dict_sorted.items():
             if column in moves:
                 return column
