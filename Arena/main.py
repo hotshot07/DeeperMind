@@ -46,16 +46,17 @@ def main():
 
     #create arena
     if args.agent2 == 'all3':
-        opponents = ['dfs','bfs','minimax','random', 'qlearn', 'nn-minimax', 'nn-bfs', 'nn-hybrid']
+        opponents = ['dfs','bfs','minimax','random', 'qlearn3_p2', 'nn-minimax', 'nn-bfs', 'nn-hybrid']
     
-    if args.agent2 == 'all4':
-        opponents = ['dfs','bfs','minimax', 'random', 'nn-minimax4', 'nn-dfs4','nn-hybrid-everything4']
+    # REMEMBER TO CHANGE THE QLEARN AGENT TO PLAYER 2 
+    elif args.agent2 == 'all4':
+        opponents = ['dfs','bfs','minimax', 'random', 'qlearn4_p2', 'nn-minimax4', 'nn-dfs4','nn-hybrid-everything4']
     
     else:
         opponents = [args.agent2]
 
     #create a file to contain test results
-    file = utils.create_file(args.agent1)
+    file = utils.create_file(args.agent1 + args.agent2)
     utils.write_col_names(file)
     
     for opponent in opponents:
@@ -66,8 +67,6 @@ def main():
         arena = Arena(args.agent1, opponent, args.games)
 
         random_first_move = True 
-        
-        
         
         #run several games
         for x in range(arena.num_games):

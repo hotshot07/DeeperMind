@@ -1,0 +1,1 @@
+python3 main.py 6 7 4 --agent1=bfs --agent2=all4 --games=100

@@ -1,8 +1,8 @@
 name,wins,ties,losses
-dfs,0,0,1
-bfs,1,0,0
-minimax,1,0,0
-random,0,0,1
-nn-minimax4,0,0,1
-nn-dfs4,1,0,0
-nn-hybrid-everything4,1,0,0
+dfs,18,0,82
+bfs,33,0,67
+minimax,88,0,12
+random,16,0,84
+nn-minimax,38,0,62
+nn-bfs,5,0,95
+nn-hybrid,45,0,55
