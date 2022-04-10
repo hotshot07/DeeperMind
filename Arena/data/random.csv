@@ -1,0 +1,5 @@
+name,wins,ties,losses
+dfs,75,0,25
+bfs,74,0,26
+minimax,92,0,8
+qlearn,64,0,36
