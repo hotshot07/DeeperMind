@@ -157,6 +157,7 @@ class Game:
 
     def drop_piece(self, row: int, col: int, piece: int) -> None:
         self.board[row][col] = piece
+
         if self.quiet:
             return
         # self.print_board()

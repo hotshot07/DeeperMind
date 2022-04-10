@@ -38,15 +38,20 @@ class Arena:
             return random_agent.Random_agent(agent_number)
         if agent_string == 'qlearn':
             return q_learning_agent.Q_learning_agent(agent_number)
-            pass
         if agent_string == 'nn-minimax':
             return neural_net_agents.NNMinimaxAgent(agent_number)
         if agent_string == 'nn-bfs':
             return neural_net_agents.NNBfsAgent(agent_number)
         if agent_string == 'nn-hybrid':
             return neural_net_agents.NNHybridAgent(agent_number)
-        
-            
+        if agent_string == 'nn-minimax4':
+            return neural_net_agents.NNMinimaxAgent4(agent_number)
+        if agent_string == 'nn-dfs4':
+            return neural_net_agents.NNDfsAgent4(agent_number)
+        if agent_string == 'nn-hybrid4':
+            return neural_net_agents.NNHybridAgent4(agent_number)
+        if agent_string == 'nn-hybrid-everything4':
+            return neural_net_agents.NNEverything(agent_number)
         if agent_string == 'human':
             return human_agent.Human_agent(agent_number)
     
