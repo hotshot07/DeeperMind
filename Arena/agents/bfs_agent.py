@@ -5,6 +5,9 @@ import csv
 import game
 
 class Bfs_agent:
+    def __str__(self) -> str:
+        return "BFS Agent"
+    
     def __init__(self, agent_number):
         self.agent_number = agent_number
         self.actions = []

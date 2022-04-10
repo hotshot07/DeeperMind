@@ -13,6 +13,9 @@ q_value_table = {}
 
 
 class Q_learning_agent:
+    def __str__(self) -> str:
+        return "Qlearning Agent"
+    
     def __init__(self, agent_number):
         self.agent_number = agent_number
 

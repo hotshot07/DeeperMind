@@ -2,6 +2,9 @@ import game
 import random
 
 class Random_agent:
+    def __str__(self) -> str:
+        return "Random Agent"
+    
     def __init__(self, agent_number) -> None:
         self.agent_number = agent_number
 

@@ -3,6 +3,9 @@ import game
 #it's you!
 
 class Human_agent:
+    def __str__(self) -> str:
+        return "Human Agent"
+    
     def __init__(self, agent_number) -> None:
         self.agent_number = agent_number
 

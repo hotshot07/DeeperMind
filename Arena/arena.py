@@ -50,6 +50,8 @@ class Arena:
             return neural_net_agents.NNDfsAgent4(agent_number)
         if agent_string == 'nn-hybrid4':
             return neural_net_agents.NNHybridAgent4(agent_number)
+        if agent_string == 'nn-hybrid-everything4':
+            return neural_net_agents.NNEverything(agent_number)
         if agent_string == 'human':
             return human_agent.Human_agent(agent_number)
     
