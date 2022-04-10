@@ -5,10 +5,14 @@ plt.rcParams["figure.figsize"] = (16,9)
 
 W = 0.2
 
-AGENT='Qlearning'
+AGENT='Q-learning'
+CONNECT=4
+FILE_NAME="randomall4"
 # /Users/hotshot07/Desktop/DeeperMind/Arena/plot_data/
 
-df = pd.read_csv("../plot_data/qlearn4_p1all4.csv")
+
+
+df = pd.read_csv(f"../plot_data/{FILE_NAME}.csv")
 
 agent_names = list(df['name'])
 
@@ -34,8 +38,12 @@ plt.xticks(bar1+W,agent_names)
 plt.xlabel('Agents', fontsize = 16)
 plt.ylabel('Number of games', fontsize=16)
 
-plt.title(f"Outcomes of games: {AGENT} vs different algorithms", fontsize=20)
-plt.show()
+plt.title(f"Outcomes of Connect {CONNECT} games: {AGENT} vs different algorithms", fontsize=20)
+plt.savefig(f'figures/{FILE_NAME}.png', dpi=300, bbox_inches='tight')
+# plt.show()
+
+
+# qlearn4_p2,29,27,44
 
 
 
