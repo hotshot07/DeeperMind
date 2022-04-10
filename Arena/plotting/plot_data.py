@@ -6,10 +6,8 @@ plt.rcParams["figure.figsize"] = (16,9)
 W = 0.2
 
 AGENT='Random'
-CONNECT=4
+CONNECT=3
 FILE_NAME="randomall4"
-# /Users/hotshot07/Desktop/DeeperMind/Arena/plot_data/
-
 
 
 df = pd.read_csv(f"../plot_data/{FILE_NAME}.csv")
