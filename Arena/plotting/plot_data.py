@@ -6,7 +6,7 @@ plt.rcParams["figure.figsize"] = (16,9)
 W = 0.2
 
 AGENT='Q-learning'
-CONNECT=4
+CONNECT=3
 FILE_NAME="qlearn3_p1all3"
 
 
