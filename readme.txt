@@ -4,7 +4,7 @@ Overleaf report: https://www.overleaf.com/read/xcgkqqjctrgb
 
 Meeting minutes: https://docs.google.com/document/d/11WZjMbsCun1tGQPkfc7czqA9zyP-bjkqtW2eyNKAf4I/edit?usp=sharing
 
-Video link: 
+Video link: https://youtu.be/dJSFqVQXTfY 
 
 Contributions:
 Claudia:
