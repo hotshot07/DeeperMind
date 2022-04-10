@@ -1,13 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+plt.rcParams["figure.figsize"] = (16,9)
 
 W = 0.2
 
-AGENT='bfs'
+AGENT='Qlearning'
+# /Users/hotshot07/Desktop/DeeperMind/Arena/plot_data/
 
-
-df = pd.read_csv("../plot_data/bfsall4.csv")
+df = pd.read_csv("../plot_data/qlearn4_p1all4.csv")
 
 agent_names = list(df['name'])
 
@@ -31,9 +32,9 @@ plt.legend()
 plt.xticks(bar1+W,agent_names)
 
 plt.xlabel('Agents', fontsize = 16)
-plt.ylabel('Games', fontsize=16)
+plt.ylabel('Number of games', fontsize=16)
 
-plt.title(f"{AGENT} vs ..")
+plt.title(f"Outcomes of games: {AGENT} vs different algorithms", fontsize=20)
 plt.show()
 
 
