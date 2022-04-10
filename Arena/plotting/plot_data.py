@@ -5,7 +5,7 @@ plt.rcParams["figure.figsize"] = (16,9)
 
 W = 0.2
 
-AGENT='Q-learning'
+AGENT='Random'
 CONNECT=4
 FILE_NAME="randomall4"
 # /Users/hotshot07/Desktop/DeeperMind/Arena/plot_data/
