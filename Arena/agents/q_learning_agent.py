@@ -7,28 +7,32 @@ import os.path
 import os
 
 gamma = 1
-alpha = 0.25
-epsilon = 0.1
-q_value_table = {}
+alpha = 0.3
+epsilon = 0
+# q_value_table = {}
 
 
 class Q_learning_agent:
     def __str__(self) -> str:
         return "Qlearning Agent"
     
-    def __init__(self, agent_number):
+    def __init__(self, agent_number,value):
         self.agent_number = agent_number
+        self.q_value_table = None 
+        self.value = value
+        self.readQTable()
+        
+        
 
     def flipCoin(self, p):
         r = random.random()
         return r < p
 
     def readQTable(self):
-        global q_value_table
         q_value_table_read = {}
         #print("LIST DIR ", os.listdir(os.getcwd()))
         # if os.path.exists('agents/q_tables/q_table_optimised_connect3.json'):
-        with open("agents/q_tables/q_table_optimised_connect4.json", "r") as f:
+        with open(f"agents/q_tables/q_table_optimised_connect{self.value}.json", "r") as f:
             data = json.load(f)
             dic = json.loads(data)
             k = dic.keys()
@@ -36,13 +40,14 @@ class Q_learning_agent:
             k1 = [eval(i) for i in k]
             q_value_table_read = dict(zip(*[k1, v]))
 
-        q_value_table = q_value_table_read
+        print("Q_value_table_read")
+        self.q_value_table = q_value_table_read
 
     def getQValue(self, state, action):
-        if q_value_table.get((state, action)) is None:
-            q_value_table[(state, action)] = 0
+        if self.q_value_table.get((state, action)) is None:
+            self.q_value_table[(state, action)] = 0
 
-        return q_value_table[(state, action)]
+        return self.q_value_table[(state, action)]
 
     def computeValueFromQValues(self, game_state, state):
         """
@@ -103,32 +108,11 @@ class Q_learning_agent:
 
         return action
 
-    def update(self, game_state, state, action):
-        reward = 0
-        if game_state.game_over == True:
-            winner_RL = game_state.check_for_win(1)
-            winner_player2 = game_state.check_for_win(2)
-
-            if winner_RL == True:
-                reward = 2
-            elif winner_player2 == True:
-                reward = -2
-            else:
-                reward = 0.5
-
-        sample = reward + gamma*self.computeValueFromQValues(game_state, state)
-        new_q_value = (1-alpha)*self.getQValue(state, action) + alpha*sample
-
-        # update q value in q table
-        q_value_table[(state, action)] = new_q_value
-
     def get_best_move(self, game_state):
-        self.readQTable()
         state = copy.deepcopy(game_state.board)
         state = tuple(map(tuple, state))
         best_action = self.getAction(game_state, state)
-        row = game_state.get_next_open_row(best_action)
-        self.update(game_state, state, best_action)
+        #self.update(game_state, state, best_action)
 
         # best_action is a column number
         return best_action

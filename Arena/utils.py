@@ -7,9 +7,9 @@ import json
 
 #append to files
 def create_file(name):
-    if not os.path.exists("data/"):
-        os.mkdir("data")
-    file = open(f"data/{name}.csv", "w", newline="")
+    if not os.path.exists("plot_data/"):
+        os.mkdir("plot_data")
+    file = open(f"plot_data/{name}.csv", "w", newline="")
     return file
 
 def write_to_file(file, name, wins, ties, losses):

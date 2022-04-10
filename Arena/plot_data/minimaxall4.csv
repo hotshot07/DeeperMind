@@ -1,0 +1,8 @@
+name,wins,ties,losses
+dfs,5,0,95
+bfs,0,0,100
+random,0,0,100
+qlearn4_p2,0,0,100
+nn-minimax4,0,0,100
+nn-dfs4,6,0,94
+nn-hybrid-everything4,0,0,100

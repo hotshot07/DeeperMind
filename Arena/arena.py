@@ -33,11 +33,17 @@ class Arena:
         if agent_string == 'bfs':
             return bfs_agent.Bfs_agent(agent_number)
         if agent_string == 'minimax':
-            return minimax_agent.Minimax_agent(agent_number, 4)
+            return minimax_agent.Minimax_agent(agent_number, 5)
         if agent_string == 'random':
             return random_agent.Random_agent(agent_number)
-        if agent_string == 'qlearn':
-            return q_learning_agent.Q_learning_agent(agent_number)
+        if agent_string == 'qlearn3_p1':
+            return q_learning_agent.Q_learning_agent(agent_number, "3")
+        if agent_string == 'qlearn3_p2':
+            return q_learning_agent.Q_learning_agent(agent_number, "3_p2")
+        if agent_string == 'qlearn4_p1':
+            return q_learning_agent.Q_learning_agent(agent_number, "4")
+        if agent_string == 'qlearn4_p2':
+            return q_learning_agent.Q_learning_agent(agent_number, "4_p2")
         if agent_string == 'nn-minimax':
             return neural_net_agents.NNMinimaxAgent(agent_number)
         if agent_string == 'nn-bfs':
