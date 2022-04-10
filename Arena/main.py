@@ -45,8 +45,12 @@ def main():
     opponents = []
 
     #create arena
-    if args.agent2 == 'all':
+    if args.agent2 == 'all3':
         opponents = ['dfs','bfs','minimax','random', 'qlearn', 'nn-minimax', 'nn-bfs', 'nn-hybrid']
+    
+    if args.agent2 == 'all4':
+        opponents = ['dfs','bfs','minimax', 'random', 'nn-minimax4', 'nn-dfs4','nn-hybrid-everything4']
+    
     else:
         opponents = [args.agent2]
 

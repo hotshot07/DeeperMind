@@ -33,7 +33,7 @@ class Arena:
         if agent_string == 'bfs':
             return bfs_agent.Bfs_agent(agent_number)
         if agent_string == 'minimax':
-            return minimax_agent.Minimax_agent(agent_number, 4)
+            return minimax_agent.Minimax_agent(agent_number, 7)
         if agent_string == 'random':
             return random_agent.Random_agent(agent_number)
         if agent_string == 'qlearn':

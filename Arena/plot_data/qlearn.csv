@@ -1,0 +1,8 @@
+name,wins,ties,losses
+dfs,0,0,1
+bfs,1,0,0
+minimax,1,0,0
+random,0,0,1
+nn-minimax4,0,0,1
+nn-dfs4,1,0,0
+nn-hybrid-everything4,1,0,0
