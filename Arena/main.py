@@ -87,9 +87,7 @@ def main():
                     else:
                         col = arena.agent_1.get_best_move(game_state)
                         if total_moves_a1 == 0 and random_first_move:
-                            print("total moves agent 1", total_moves_a1)
                             col = random.randint(0,args.column_count-1)
-                            print("RANDOM MOVE DONE")
                             
                         total_moves_a1 = total_moves_a1 + 1
 
@@ -97,8 +95,6 @@ def main():
                     if win:
                         arena.victor = arena.agent_1.agent_number
                         arena.agent_2_losses +=1
-                    
-                    game_state.print_board()
                 
                 if game_state.turn == 1:
                     if len(game_state.get_valid_moves()) == 1:
@@ -106,9 +102,7 @@ def main():
                     else:
                         col = arena.agent_2.get_best_move(game_state)
                         if total_moves_a2 == 0 and random_first_move:
-                            print("total moves agent 2", total_moves_a2)
                             col = random.randint(0,args.column_count-1)
-                            print("RANDOM MOVE DONE")
                             
                         total_moves_a2 = total_moves_a2 + 1
                             
@@ -117,7 +111,6 @@ def main():
                         arena.victor = arena.agent_2.agent_number
                         arena.agent_2_wins +=1
 
-                    game_state.print_board()
                         
             total_moves_a1 = 0
             total_moves_a2 = 0

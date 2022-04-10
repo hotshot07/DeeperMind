@@ -29,12 +29,14 @@ class Bfs_agent:
             #try pos
             if game_state.board[pos[0]][pos[1]] == 0:
                 game_state.drop_piece(pos[0], pos[1], self.agent_number)
- 
+            
             #check if v is goal
             if game_state.check_for_win(self.agent_number):
                 #win state
                 final = pos
                 break
+            
+            
             
             for c in game_state.get_valid_moves():
                 r = game_state.get_next_open_row(c)
