@@ -66,52 +66,68 @@ class BaseNeuralAgent4:
         
         # sorts by value in reverse 
         prob_dict_sorted = {k: v for k, v in sorted(probability_dict.items(), key=lambda item: item[1], reverse=True)}
-
-        print(prob_dict_sorted)
-        game_state.print_board()
         
         for column, probability in prob_dict_sorted.items():
             if column in moves:
-                print(column)
                 return column
             
 
 
 class NNHybridAgent(BaseNeuralAgent3):
+    def __str__(self) -> str:
+        return "NNHybrid Agent3"
+    
     def __init__(self, agent_number):
         model = keras.models.load_model('agents/models/hybrid_model')
         super().__init__(agent_number, model)
         
 
 class NNBfsAgent(BaseNeuralAgent3):
+    def __str__(self) -> str:
+        return "NN BFs Agent3"
     def __init__(self, agent_number):
         model = keras.models.load_model('agents/models/bfs_model')
         super().__init__(agent_number, model)
         
         
 class NNMinimaxAgent(BaseNeuralAgent3):
+    def __str__(self) -> str:
+        return "NN Minimax Agent3"
+    
     def __init__(self, agent_number):
         model = keras.models.load_model('agents/models/minimax_neural_75')
         super().__init__(agent_number, model) 
 
 class NNHybridAgent4(BaseNeuralAgent4):
+    def __str__(self) -> str:
+        return "NN Hybrid Agent4"
+    
     def __init__(self, agent_number):
         model = keras.models.load_model('agents/models/hybrid_model_connect4')
         super().__init__(agent_number, model)
         
 
 class NNDfsAgent4(BaseNeuralAgent4):
+    def __str__(self) -> str:
+        return "NN Dfs Agent4"
+    
     def __init__(self, agent_number):
         model = keras.models.load_model('agents/models/df_neural_agent_connect4')
         super().__init__(agent_number, model)
         
         
 class NNMinimaxAgent4(BaseNeuralAgent4):
+    def __str__(self) -> str:
+        return "NN Minimax Agent4"
+    
     def __init__(self, agent_number):
         model = keras.models.load_model('agents/models/minimax_neural_connect4')
         super().__init__(agent_number, model)   
         
 class NNEverything(BaseNeuralAgent4):
+    def __str__(self) -> str:
+        return "NN Everything Agent4"
+    
     def __init__(self, agent_number):
         model = keras.models.load_model('agents/models/hybrid_everything_model_connect4')
         super().__init__(agent_number, model)  

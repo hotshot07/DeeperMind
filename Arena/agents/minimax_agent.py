@@ -6,7 +6,7 @@ class Minimax_agent:
     def __str__(self) -> str:
         return "Minimax Agent"
     
-    def __init__(self, agent_number, depth=4) -> None:
+    def __init__(self, agent_number, depth=8) -> None:
         self.agent_number= agent_number
         self.opponent_agent_number = 1 if self.agent_number == 2 else 2
         self.depth = depth

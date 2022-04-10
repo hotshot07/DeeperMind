@@ -20,7 +20,6 @@ def setup_argparser():
 
 def process_move(game_state: game.Game, col, piece, agent):
     row = game_state.get_next_open_row(col)
-    print(f"{agent.__str__} drops piece", piece)
     game_state.drop_piece(row=row,col=col,piece=piece)
 
     #needed for drawing pygame, disable for real speed

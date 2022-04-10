@@ -26,9 +26,9 @@ class Q_learning_agent:
     def readQTable(self):
         global q_value_table
         q_value_table_read = {}
-        print("LIST DIR ", os.listdir(os.getcwd()))
+        #print("LIST DIR ", os.listdir(os.getcwd()))
         # if os.path.exists('agents/q_tables/q_table_optimised_connect3.json'):
-        with open("agents/q_tables/q_table_optimised_connect3.json", "r") as f:
+        with open("agents/q_tables/q_table_optimised_connect4.json", "r") as f:
             data = json.load(f)
             dic = json.loads(data)
             k = dic.keys()
