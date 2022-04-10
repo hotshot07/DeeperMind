@@ -58,9 +58,26 @@ class NNBfsAgent(BaseNeuralAgent):
         
 class NNMinimaxAgent(BaseNeuralAgent):
     def __init__(self, agent_number):
-        print(os.listdir())
         model = keras.models.load_model('agents/models/minimax_neural_75')
+        super().__init__(agent_number, model) 
+
+class NNHybridAgent4(BaseNeuralAgent):
+    def __init__(self, agent_number):
+        model = keras.models.load_model('agents/models/hybrid_model_connect4')
+        super().__init__(agent_number, model)
+        
+
+class NNDfsAgent4(BaseNeuralAgent):
+    def __init__(self, agent_number):
+        model = keras.models.load_model('agents/models/df_neural_agent_connect4')
+        super().__init__(agent_number, model)
+        
+        
+class NNMinimaxAgent4(BaseNeuralAgent):
+    def __init__(self, agent_number):
+        model = keras.models.load_model('agents/models/minimax_neural_connect4')
         super().__init__(agent_number, model)   
+        
         
         
     
