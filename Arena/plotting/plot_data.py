@@ -5,9 +5,9 @@ plt.rcParams["figure.figsize"] = (16,9)
 
 W = 0.2
 
-AGENT='Random'
-CONNECT=3
-FILE_NAME="randomall4"
+AGENT='Q-learning'
+CONNECT=4
+FILE_NAME="qlearn3_p1all3"
 
 
 df = pd.read_csv(f"../plot_data/{FILE_NAME}.csv")
@@ -42,6 +42,6 @@ plt.savefig(f'figures/{FILE_NAME}.png', dpi=300, bbox_inches='tight')
 
 
 # qlearn4_p2,29,27,44
-
+#qlearn3_p2,27,3,70
 
 
